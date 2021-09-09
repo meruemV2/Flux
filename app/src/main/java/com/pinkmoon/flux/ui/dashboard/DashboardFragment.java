@@ -12,34 +12,45 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.pinkmoon.flux.databinding.FragmentDashboardBinding;
+import com.pinkmoon.flux.R;
 
 public class DashboardFragment extends Fragment {
+    // Widgets
+    private TextView tvDashboardPlaceholder;
 
+    // Local vars
     private DashboardViewModel dashboardViewModel;
-    private FragmentDashboardBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
                 new ViewModelProvider(this).get(DashboardViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        // Inflate the layout for this fragment
+        View view =  inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        final TextView textView = binding.tvDashboardPlaceholder;
+        defineWidgets(view);
+
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+                tvDashboardPlaceholder.setText(s);
             }
         });
-        return root;
+
+        return view;
+    }
+
+    /**
+     * Define all of the widgets you add for each fragment here.
+     * @param view instance of the inflated view within the fragment
+     */
+    private void defineWidgets(View view) {
+        tvDashboardPlaceholder = view.findViewById(R.id.tv_dashboard_placeholder);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }

@@ -12,34 +12,47 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.pinkmoon.flux.R;
 import com.pinkmoon.flux.databinding.FragmentTasksBinding;
 
 public class TasksFragment extends Fragment {
 
+    // Widgets
+    private TextView tvTasksPlaceholder;
+
+    // local vars
     private TasksViewModel tasksViewModel;
-    private FragmentTasksBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         tasksViewModel =
                 new ViewModelProvider(this).get(TasksViewModel.class);
 
-        binding = FragmentTasksBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_tasks, container, false);
 
-        final TextView textView = binding.tvTasksPlaceholder;
+        defineWidgets(view);
+
         tasksViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+                tvTasksPlaceholder.setText(s);
             }
         });
-        return root;
+
+        return view;
+    }
+
+    /**
+     * Define all of the widgets you add for each fragment here.
+     * @param view instance of the inflated view within the fragment
+     */
+    private void defineWidgets(View view) {
+        tvTasksPlaceholder = view.findViewById(R.id.tv_tasks_placeholder);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }

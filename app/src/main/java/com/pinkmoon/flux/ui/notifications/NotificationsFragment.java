@@ -13,34 +13,45 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.pinkmoon.flux.R;
-import com.pinkmoon.flux.databinding.FragmentNotificationsBinding;
 
 public class NotificationsFragment extends Fragment {
 
+    // Widgets
+    private TextView tvNotificationsPlaceholder;
+
+    // Local vars
     private NotificationsViewModel notificationsViewModel;
-    private FragmentNotificationsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         notificationsViewModel =
                 new ViewModelProvider(this).get(NotificationsViewModel.class);
 
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
-        final TextView textView = binding.tvNotificationsPlaceholder;
+        defineWidgets(view);
+
         notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                textView.setText(s);
+                tvNotificationsPlaceholder.setText(s);
             }
         });
-        return root;
+
+        return view;
+    }
+
+    /**
+     * Define all of the widgets you add for each fragment here.
+     * @param view instance of the inflated view within the fragment
+     */
+    private void defineWidgets(View view) {
+        tvNotificationsPlaceholder = view.findViewById(R.id.tv_notifications_placeholder);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }
