@@ -23,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        // menu should be considered as top level destinations (to clarify,
+        // this is the reason why in our mobile_navigation graph, there are no
+        // arrows indicating navigation destinations, since again, the 3 fragments
+        // currently on the graph are considered "top" level (global) destinations).
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_dashboard, R.id.navigation_tasks, R.id.navigation_notifications)
                 .build();
