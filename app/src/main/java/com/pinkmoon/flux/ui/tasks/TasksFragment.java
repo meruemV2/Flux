@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.pinkmoon.flux.R;
-import com.pinkmoon.flux.databinding.FragmentTasksBinding;
 
 public class TasksFragment extends Fragment {
 
