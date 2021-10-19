@@ -1,7 +1,7 @@
 package com.pinkmoon.flux;
-
 import android.os.Bundle;
-
+import android.view.View;
+import android.widget.Button;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.pinkmoon.flux.ui.tasks.AddEditTaskFragment;
 
@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+
     }
 
     // We override the below for the implementation of the back button to navigate back

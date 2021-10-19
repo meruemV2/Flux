@@ -52,4 +52,10 @@ dependencies {
 
     // Android Debug Database
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+
+    //Volley - Google API tool for REST API work and Canvas implementation
+    implementation 'com.android.volley:volley:1.2.1'
+    //GSON - Google Serialization, Deserialization tool
+    implementation 'com.google.code.gson:gson:2.8.8'
+
 }
