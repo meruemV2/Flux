@@ -12,7 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pinkmoon.flux.R;
 import com.pinkmoon.flux.db.category.Category;
 import com.pinkmoon.flux.db.category.CategoryViewModel;
@@ -23,6 +25,7 @@ public class TasksFragment extends Fragment {
 
     // Widgets
     private TextView tvTasksPlaceholder;
+    private FloatingActionButton fabAddNewTask;
 
     // local vars
     private TasksFragmentViewModel tasksFragmentViewModel;
@@ -36,8 +39,9 @@ public class TasksFragment extends Fragment {
 
         defineWidgets(view);
         defineObservers();
+        setOnClickListeners();
 
-        runDBTest();
+        //runDBTest();
         return view;
     }
 
@@ -53,6 +57,8 @@ public class TasksFragment extends Fragment {
 
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
+
+        fabAddNewTask = view.findViewById(R.id.fab_fragment_tasks_add_new_task);
     }
 
     private void defineObservers() {
@@ -61,6 +67,12 @@ public class TasksFragment extends Fragment {
             public void onChanged(@Nullable String s) {
                 tvTasksPlaceholder.setText(s);
             }
+        });
+    }
+
+    private void setOnClickListeners() {
+        fabAddNewTask.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.action_navigation_tasks_to_addEditTaskFragment);
         });
     }
 

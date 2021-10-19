@@ -3,12 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/drawable/button_reminder_main.xml" value="0.15208333333333332" />
+        <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/drawable/button_reminder_pressed.xml" value="0.15208333333333332" />
+        <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/drawable/button_reminder_ready.xml" value="0.15208333333333332" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/fragment_add_edit_task.xml" value="0.15324214792299898" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/fragment_dashboard.xml" value="0.22552083333333334" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/fragment_notifications.xml" value="0.22552083333333334" />
+        <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/fragment_reminder_detail.xml" value="0.18432971014492755" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/fragment_tasks.xml" value="0.22" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
+        <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/menu/menu_options_general_save.xml" value="0.31333333333333335" />
       </map>
     </option>
   </component>

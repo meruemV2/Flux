@@ -15,11 +15,45 @@
         android:id="@+id/navigation_tasks"
         android:name="com.pinkmoon.flux.ui.tasks.TasksFragment"
         android:label="@string/title_tasks"
-        tools:layout="@layout/fragment_tasks" />
+        tools:layout="@layout/fragment_tasks" >
+        <action
+            android:id="@+id/action_navigation_tasks_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/slide_out_bottom"
+            app:popExitAnim="@anim/slide_out_bottom"
+            app:popUpToInclusive="false" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.pinkmoon.flux.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/addEditTaskFragment"
+        android:name="com.pinkmoon.flux.ui.tasks.AddEditTaskFragment"
+        android:label="@string/str_add_new_task"
+        tools:layout="@layout/fragment_add_edit_task" >
+        <action
+            android:id="@+id/action_addEditTaskFragment_to_reminderDetailFragment"
+            app:destination="@id/reminderDetailFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_addEditTaskFragment_to_navigation_tasks"
+            app:destination="@id/navigation_tasks"
+            app:enterAnim="@anim/slide_out_bottom"
+            app:exitAnim="@anim/slide_out_bottom" />
+    </fragment>
+    <fragment
+        android:id="@+id/reminderDetailFragment"
+        android:name="com.pinkmoon.flux.ui.reminders.ReminderDetailFragment"
+        android:label="@string/str_fragment_reminder_detail_title"
+        tools:layout="@layout/fragment_reminder_detail" >
+        <action
+            android:id="@+id/action_reminderDetailFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment"
+            app:enterAnim="@anim/slide_in_right" />
+    </fragment>
 </navigation>
