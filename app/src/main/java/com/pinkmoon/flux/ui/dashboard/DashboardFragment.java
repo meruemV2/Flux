@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -25,23 +28,33 @@ import com.google.gson.Gson;
 import com.pinkmoon.flux.R;
 import com.pinkmoon.flux.API.Assignment;
 import com.pinkmoon.flux.API.Course;
+import com.pinkmoon.flux.ui.dashboard.calendar.CalendarAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements CalendarAdapter.OnItemListener {
     // Widgets
-    private TextView tvDashboardPlaceholder;
+    private TextView monthYearText;
+    private RecyclerView calendarRecyclerView;
+
+    // top calendar controls
+    private Button btnPrevMonth, btnNextMonth;
 
     // Local vars
     private DashboardViewModel dashboardViewModel;
+    public static final String accessToken = "10284~nqtIdmzKxZtdTw324H6HQ3zZlG9TJSPNqagCfIlgjPwiErZttFv5Yj1ticxUT0xN";
+    private LocalDate selectedDate;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,9 +68,13 @@ public class DashboardFragment extends Fragment {
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                tvDashboardPlaceholder.setText(s);
+
             }
         });
+
+        selectedDate = LocalDate.now();
+        setCalendarViews();
+        setOnClickListeners();
 
         //Starts the Asynchronous API Calls
         API_CALL();
@@ -70,7 +87,11 @@ public class DashboardFragment extends Fragment {
      * @param view instance of the inflated view within the fragment
      */
     private void defineWidgets(View view) {
-        tvDashboardPlaceholder = view.findViewById(R.id.tv_dashboard_placeholder);
+        calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
+        monthYearText = view.findViewById(R.id.monthYearTV);
+
+        btnPrevMonth = view.findViewById(R.id.btn_fragment_dashboard_prev_month);
+        btnNextMonth = view.findViewById(R.id.btn_fragment_dashboard_next_month);
     }
 
     @Override
@@ -78,11 +99,57 @@ public class DashboardFragment extends Fragment {
         super.onDestroyView();
     }
 
+    private void setCalendarViews() {
+        // month view
+        monthYearText.setText(monthYearFromDate(selectedDate));
+        ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
+        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this);
+
+        // rv stuff
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7); // 7 columns in the rv
+        calendarRecyclerView.setLayoutManager(layoutManager);
+        calendarRecyclerView.setAdapter(calendarAdapter);
+    }
+
+    private ArrayList<String> daysInMonthArray(LocalDate selectedDate) {
+        ArrayList<String> daysInMonthArray = new ArrayList<>();
+        YearMonth yearMonth = YearMonth.from(selectedDate);
+
+        int daysInMonth = yearMonth.lengthOfMonth();
+
+        LocalDate firstOfMonth = selectedDate.withDayOfMonth(1); // get first day of the month
+        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
+
+        for (int i = 1; i < 42; i++){
+            if(i <= dayOfWeek || i > daysInMonth + dayOfWeek){
+                daysInMonthArray.add(" "); // we add a blank
+            }else{
+                daysInMonthArray.add(String.valueOf(i - dayOfWeek));
+            }
+        }
+        return daysInMonthArray;
+    }
+
+    private String monthYearFromDate(LocalDate date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+        return date.format(formatter);
+    }
+
+    private void setOnClickListeners() {
+        btnPrevMonth.setOnClickListener(view -> {
+            selectedDate = selectedDate.minusMonths(1);
+            setCalendarViews();
+        });
+
+        btnNextMonth.setOnClickListener(view -> {
+            selectedDate = selectedDate.plusMonths(1);
+            setCalendarViews();
+        });
+    }
 
     //Global Elements
     static List<Course> ListOfCourses = new ArrayList<>();
     static List<Assignment> ListOfAssignments = new ArrayList<>();
-    static String accessToken = "10284~qox5hujzApMTFagpoCoqLIU3CC0ABWPRFxwGGnizZEpnnXN8DYzFrYvpDMwGcOA7";
 
 
     //Cleans the lists in memory in case the user repeatedly executes the call during
@@ -276,6 +343,11 @@ public class DashboardFragment extends Fragment {
     }
 
 
-
-
+    @Override
+    public void onItemClick(int position, String dayText) {
+        if(!dayText.equals(" ")){
+            String m = dayText + " " + monthYearFromDate(selectedDate);
+            Toast.makeText(getContext(), m, Toast.LENGTH_SHORT).show();
+        }
+    }
 }
