@@ -3,6 +3,7 @@ package com.pinkmoon.flux.ui.dashboard.calendar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,14 +12,15 @@ import com.pinkmoon.flux.R;
 
 import java.util.ArrayList;
 
-public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
+public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder> {
 
     private final ArrayList<String> daysOfMonth;
-    private OnItemListener listener;
+    //private OnItemListener listener;
+    private OnItemClickListener listener;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, OnItemListener listener) {
+    public CalendarAdapter(ArrayList<String> daysOfMonth) {
         this.daysOfMonth = daysOfMonth;
-        this.listener = listener;
+        //this.listener = listener;
     }
 
     @NonNull
@@ -26,9 +28,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     public CalendarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.item_calendar_cell, parent, false);
+
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.height = (int) (parent.getHeight() * 0.1666666); // get each cell to be exactly 1/6th of the view
-        return new CalendarViewHolder(view, listener);
+
+        return new CalendarViewHolder(view);
     }
 
     @Override
@@ -41,7 +45,30 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
         return daysOfMonth.size();
     }
 
-    public interface OnItemListener {
+    public class CalendarViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView dayOfMonth;
+
+        public CalendarViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            dayOfMonth = itemView.findViewById(R.id.cellDayText);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                //int position = getAbsoluteAdapterPosition();
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(getAdapterPosition(), dayOfMonth.getText().toString());
+                }
+            });
+        }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
+    }
+
+    public interface OnItemClickListener {
         void onItemClick(int position, String dayText);
     }
 }

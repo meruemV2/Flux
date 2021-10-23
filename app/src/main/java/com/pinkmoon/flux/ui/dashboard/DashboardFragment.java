@@ -43,7 +43,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class DashboardFragment extends Fragment implements CalendarAdapter.OnItemListener {
+public class DashboardFragment extends Fragment {
     // Widgets
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
@@ -103,12 +103,21 @@ public class DashboardFragment extends Fragment implements CalendarAdapter.OnIte
         // month view
         monthYearText.setText(monthYearFromDate(selectedDate));
         ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this);
+        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth);
 
         // rv stuff
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7); // 7 columns in the rv
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
+        calendarAdapter.setOnItemClickListener(new CalendarAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, String dayText) {
+                if(!dayText.equals(" ")){
+                    String m = dayText + " " + monthYearFromDate(selectedDate);
+                    Toast.makeText(getContext(), m, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private ArrayList<String> daysInMonthArray(LocalDate selectedDate) {
@@ -340,14 +349,5 @@ public class DashboardFragment extends Fragment implements CalendarAdapter.OnIte
         }
         //All the Assignments are stored in this list.
         return ListOfAssignments;
-    }
-
-
-    @Override
-    public void onItemClick(int position, String dayText) {
-        if(!dayText.equals(" ")){
-            String m = dayText + " " + monthYearFromDate(selectedDate);
-            Toast.makeText(getContext(), m, Toast.LENGTH_SHORT).show();
-        }
     }
 }
