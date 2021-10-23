@@ -72,7 +72,10 @@ public class TasksFragment extends Fragment {
 
     private void setOnClickListeners() {
         fabAddNewTask.setOnClickListener(view -> {
-            Navigation.findNavController(view).navigate(R.id.action_navigation_tasks_to_addEditTaskFragment);
+
+            TasksFragmentDirections.ActionNavigationTasksToAddEditTaskFragment action =
+                    TasksFragmentDirections.actionNavigationTasksToAddEditTaskFragment();
+            Navigation.findNavController(view).navigate(action);
         });
     }
 

@@ -45,6 +45,13 @@
             app:destination="@id/navigation_tasks"
             app:enterAnim="@anim/slide_out_bottom"
             app:exitAnim="@anim/slide_out_bottom" />
+        <action
+            android:id="@+id/action_addEditTaskFragment_to_addEditCategoryFragment"
+            app:destination="@id/addEditCategoryFragment" />
+        <argument
+            android:name="newCategoryName"
+            app:argType="string"
+            android:defaultValue=" " />
     </fragment>
     <fragment
         android:id="@+id/reminderDetailFragment"
@@ -56,4 +63,17 @@
             app:destination="@id/addEditTaskFragment"
             app:enterAnim="@anim/slide_in_right" />
     </fragment>
+    <dialog
+        android:id="@+id/addEditCategoryFragment"
+        android:name="com.pinkmoon.flux.ui.categories.AddEditCategoryFragment"
+        android:label="fragment_add_edit_category"
+        tools:layout="@layout/fragment_add_edit_category" >
+        <action
+            android:id="@+id/action_addEditCategoryFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
+        <argument
+            android:name="editCategoryName"
+            app:argType="string"
+            android:defaultValue=" " />
+    </dialog>
 </navigation>

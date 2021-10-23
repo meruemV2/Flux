@@ -3,6 +3,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.pinkmoon.flux.ui.categories.AddEditCategoryFragment;
 import com.pinkmoon.flux.ui.tasks.AddEditTaskFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,7 @@ import androidx.navigation.ui.NavigationUI;
 
 
 public class MainActivity extends AppCompatActivity
-        implements AddEditTaskFragment.AddEditTaskFragmentListener{
+        implements AddEditTaskFragment.AddEditTaskFragmentListener {
 
     NavController navController;
 

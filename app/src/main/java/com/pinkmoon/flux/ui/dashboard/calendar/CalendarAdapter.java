@@ -24,11 +24,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
     @NonNull
     @Override
     public CalendarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_calendar_cell, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_calendar_cell, parent, false);
 
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         layoutParams.height = (int) (parent.getHeight() * 0.1666666); // get each cell to be exactly 1/6th of the view
+
 
         return new CalendarViewHolder(view);
     }
