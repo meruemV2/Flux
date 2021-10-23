@@ -15,12 +15,10 @@ import java.util.ArrayList;
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder> {
 
     private final ArrayList<String> daysOfMonth;
-    //private OnItemListener listener;
     private OnItemClickListener listener;
 
     public CalendarAdapter(ArrayList<String> daysOfMonth) {
         this.daysOfMonth = daysOfMonth;
-        //this.listener = listener;
     }
 
     @NonNull
@@ -55,7 +53,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             dayOfMonth = itemView.findViewById(R.id.cellDayText);
 
             itemView.setOnClickListener(new View.OnClickListener() {
-                //int position = getAbsoluteAdapterPosition();
                 @Override
                 public void onClick(View view) {
                     listener.onItemClick(getAdapterPosition(), dayOfMonth.getText().toString());
