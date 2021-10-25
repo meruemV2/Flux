@@ -1,21 +1,49 @@
 package com.pinkmoon.flux.API;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "table_course")
 public class Course {
-    @SerializedName("name")
-    private String courseName;
+
+    @PrimaryKey(autoGenerate = true)
+    private int primId;
+
     @SerializedName("id")
     private String courseId;
 
-    public Course(String aCourseName, String aCourseId)
-    {
-        courseName   = aCourseName;
-        courseId     = aCourseId;
+    @SerializedName("name")
+    private String courseName;
+
+    public Course(String courseId, String courseName) {
+        this.courseId = courseId;
+        this.courseName = courseName;
     }
 
-    public String GetName() { return courseName; }
-    public String GetId()   { return courseId; }
+    public int getPrimId() {
+        return primId;
+    }
 
+    public void setPrimId(int primId) {
+        this.primId = primId;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
 }
 

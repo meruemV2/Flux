@@ -6,13 +6,19 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.pinkmoon.flux.API.Assignment;
+import com.pinkmoon.flux.API.Course;
+import com.pinkmoon.flux.db.canvas_classes.assignment.AssignmentDao;
+import com.pinkmoon.flux.db.canvas_classes.course.CourseDao;
 import com.pinkmoon.flux.db.category.Category;
 import com.pinkmoon.flux.db.category.CategoryDao;
 import com.pinkmoon.flux.db.task.Task;
 import com.pinkmoon.flux.db.task.TaskDao;
 
 @Database(entities = {
+        Assignment.class,
         Category.class,
+        Course.class,
         Task.class,
         }, version = 1)
 public abstract class FluxDB extends RoomDatabase {
@@ -20,7 +26,9 @@ public abstract class FluxDB extends RoomDatabase {
     private static FluxDB instance;
 
     // Dao Declarations
+    public abstract AssignmentDao       assignmentDao();
     public abstract CategoryDao         categoryDao();
+    public abstract CourseDao           courseDao();
     public abstract TaskDao             taskDao();
 
     /**

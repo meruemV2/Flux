@@ -278,7 +278,7 @@ public class DashboardFragment extends Fragment {
     {
         Log.d("VERIFICATION", "GetCanvasAssignments");
         String coursesURL = "https://canvas.instructure.com/api/v1/courses/";
-        String assignmentsURL = coursesURL + aCourse.GetId() + "/assignments";
+        String assignmentsURL = coursesURL + aCourse.getCourseId() + "/assignments";
         Log.d("VERIFICATION", assignmentsURL);
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(requireContext());
