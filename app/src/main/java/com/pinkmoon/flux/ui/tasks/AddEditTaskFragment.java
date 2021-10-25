@@ -169,7 +169,9 @@ public class AddEditTaskFragment extends Fragment {
                     // Add new...
                     Navigation.findNavController(view).navigate(R.id.action_addEditTaskFragment_to_addEditCategoryFragment);
                 } else {
-                    selectedCategory = listOfCategories.get(i);
+                    if (!listOfCategories.isEmpty()) {
+                        selectedCategory = listOfCategories.get(i);
+                    }
                     // passing it as a SafeArgs argument
 //                    AddEditTaskFragmentDirections.ActionAddEditTaskFragmentToAddEditCategoryFragment action =
 //                            AddEditTaskFragmentDirections.actionAddEditTaskFragmentToAddEditCategoryFragment(selectedCategory.getCategoryName());
