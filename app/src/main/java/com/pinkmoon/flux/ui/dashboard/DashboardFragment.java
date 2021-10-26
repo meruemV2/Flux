@@ -13,10 +13,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -52,6 +54,7 @@ public class DashboardFragment extends Fragment {
     private RecyclerView calendarRecyclerView;
     private TextView tvCourseTest, tvAssignmentTest;
     private ProgressBar progAPILoad;
+    private SwipeRefreshLayout srlRefreshHolder;
 
     // top calendar controls
     private Button btnPrevMonth, btnNextMonth;
@@ -63,6 +66,20 @@ public class DashboardFragment extends Fragment {
 
     private CourseViewModel courseViewModel;
     private AssignmentViewModel assignmentViewModel;
+
+    private List<Course> coursesFromCanvas = new ArrayList<>();
+    private List<Assignment> assignmentsFromCanvas = new ArrayList<>();
+
+    private List<Course> localCourses = new ArrayList<>();
+    private List<Assignment> localAssignments = new ArrayList<>();
+    private boolean localCoursesLoaded, localAssignmentsLoaded = false;
+
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
+        assignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
+
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -84,57 +101,89 @@ public class DashboardFragment extends Fragment {
         setCalendarViews();
         setOnClickListeners();
 
-        //Starts the Asynchronous API Calls
-        loadCanvasCourses();
+        srlRefreshHolder.setEnabled(false);
+        courseViewModel.getAllCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
+            @Override
+            public void onChanged(List<Course> courses) {
+                localCourses = courses;
+                localCoursesLoaded = true;
+                checkToEnableSwipeRefresh();
+                Toast.makeText(getContext(), "Local courses updated.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        assignmentViewModel.getAllAssignments().observe(getViewLifecycleOwner(), new Observer<List<Assignment>>() {
+            @Override
+            public void onChanged(List<Assignment> assignments) {
+                localAssignments = assignments;
+                localAssignmentsLoaded = true;
+                checkToEnableSwipeRefresh();
+                Toast.makeText(getContext(), "Local assignments updated.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        progAPILoad.setVisibility(View.VISIBLE);
+    private void checkToEnableSwipeRefresh() {
+        if(localCoursesLoaded && localAssignmentsLoaded){
+            srlRefreshHolder.setEnabled(true);
+        }
     }
 
     private void loadCanvasCourses() {
-        StringBuilder courseTest = new StringBuilder();
+        courseViewModel.getListOfCanvasCourses().removeObservers(getViewLifecycleOwner());
         courseViewModel.getListOfCanvasCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
             @Override
             public void onChanged(List<Course> courses) {
-                for (int i = 0; i < courses.size(); i++) {
-                    courseTest.append("RECORD ADDED: COURSE Name: ")
-                            .append(courses.get(i).getCourseName())
-                            .append(" Id: ")
-                            .append(courses.get(i).getCourseId())
-                            .append("\n");
-                    tvCourseTest.setText(courseTest);
+                if(getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+                    for (int i = 0; i < courses.size(); i++) {
+                        //coursesFromCanvas = courses;
 
+                        // check if the current course object is in the local database
+                        boolean matchFound = false;
+                        for (int j = 0; j < localCourses.size(); j++) {
+                            if(courses.get(i).getCourseId().equals(localCourses.get(j).getCourseId())){
+                                matchFound = true;
+                                break;
+                            }
+                        }
+                        // insert Canvas course into the local database, only if it's not already in
+                        if(!matchFound){
+                            courseViewModel.insertCourse(courses.get(i));
+                        }
+                    }
                     loadCanvasAssignments(courses);
+                    //srlRefreshHolder.setRefreshing(false);
                 }
             }
         });
     }
 
     private void loadCanvasAssignments(List<Course> courses){
-        StringBuilder assignmentTest = new StringBuilder();
-        for (Course course: courses) {
-            assignmentViewModel.getListOfCanvasAssignments(course).observe(getViewLifecycleOwner(),
-                    new Observer<List<Assignment>>() {
-                        @Override
-                        public void onChanged(List<Assignment> assignments) {
-                            for (Assignment assignment:
-                                 assignments) {
-                                assignmentTest.append("RECORD ADDED: COURSE Name: ")
-                                        .append(assignment.getAssignmentName())
-                                        .append(" Id: ")
-                                        .append(assignment.getAssignmentCourseId())
-                                        .append("\n");
-                                tvAssignmentTest.setText(assignmentTest);
+        assignmentViewModel.getListOfCanvasAssignments(courses).removeObservers(getViewLifecycleOwner());
+        assignmentViewModel.getListOfCanvasAssignments(courses).observe(getViewLifecycleOwner(),
+                new Observer<List<Assignment>>() {
+            @Override
+            public void onChanged(List<Assignment> assignments) {
+                if(getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+
+                    boolean matchFound = false;
+                    for (int i = 0; i < assignments.size(); i++) {
+                        for (int j = 0; j < localAssignments.size(); j++) {
+                            if(assignments.get(i).getAssignmentId().equals(localAssignments.get(j).getAssignmentId())){
+                                matchFound = true;
+                                break;
                             }
-                            progAPILoad.setVisibility(View.GONE);
                         }
-                    });
-        }
+                        if(!matchFound){
+                            assignmentViewModel.insertAssignment(assignments.get(i));
+                        }
+                    }
+                    srlRefreshHolder.setRefreshing(false);
+                }
+            }
+        });
     }
 
     /**
@@ -152,6 +201,8 @@ public class DashboardFragment extends Fragment {
 
         progAPILoad = view.findViewById(R.id.prog_fragment_dashboard_api_load);
 
+        srlRefreshHolder = view.findViewById(R.id.srl_fragment_dashboard_refresh_holder);
+        
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
         assignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
     }
@@ -215,6 +266,14 @@ public class DashboardFragment extends Fragment {
         btnNextMonth.setOnClickListener(view -> {
             selectedDate = selectedDate.plusMonths(1);
             setCalendarViews();
+        });
+        
+        srlRefreshHolder.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Starts the Asynchronous API Calls
+                loadCanvasCourses();
+            }
         });
     }
 }

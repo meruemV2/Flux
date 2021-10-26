@@ -1,5 +1,8 @@
 package com.pinkmoon.flux.db.canvas_classes.assignment;
 
+import static androidx.room.OnConflictStrategy.IGNORE;
+import static androidx.room.OnConflictStrategy.REPLACE;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -14,8 +17,8 @@ import java.util.List;
 @Dao
 public interface AssignmentDao {
 
-    @Insert
-    void insertAssignment(Assignment assignment);
+    @Insert(onConflict = REPLACE)
+    void insertAssignment(Assignment... assignment);
 
     @Update
     void updateAssignment(Assignment assignment);

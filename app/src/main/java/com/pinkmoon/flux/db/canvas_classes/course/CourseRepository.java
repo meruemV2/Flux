@@ -51,7 +51,7 @@ public class CourseRepository {
         allCourses = courseDao.getAllCourses();
     }
 
-    public void insertCourse(Course course){
+    public void insertCourse(Course... course){
         new InsertCourseAsync(courseDao).execute(course);
     }
 
@@ -74,9 +74,10 @@ public class CourseRepository {
             this.courseDao = courseDao;
         }
 
+
         @Override
         protected Void doInBackground(Course... courses) {
-            courseDao.insertCourse(courses[0]);
+            courseDao.insertCourse(courses);
             return null;
         }
     }
@@ -112,8 +113,8 @@ public class CourseRepository {
     public MutableLiveData<List<Course>> getListOfCanvasCourses() {
         if(listOfCanvasCourses == null){
             listOfCanvasCourses = new MutableLiveData<>();
-            loadCanvasCourses();
         }
+        loadCanvasCourses();
         return listOfCanvasCourses;
     }
 

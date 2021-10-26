@@ -28,7 +28,7 @@ public class CourseViewModel extends AndroidViewModel {
         listOfCanvasCourses = courseRepository.getListOfCanvasCourses();
     }
 
-    public void insertCourse(Course course){
+    public void insertCourse(Course... course){
         courseRepository.insertCourse(course);
     }
 

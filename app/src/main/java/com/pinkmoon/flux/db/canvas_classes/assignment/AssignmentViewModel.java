@@ -28,7 +28,7 @@ public class AssignmentViewModel extends AndroidViewModel {
         allAssignments = assignmentRepository.getAllAssignments();
     }
 
-    public void insertAssignment(Assignment assignment){
+    public void insertAssignment(Assignment... assignment){
         assignmentRepository.insertAssignment(assignment);
     }
 
@@ -44,8 +44,8 @@ public class AssignmentViewModel extends AndroidViewModel {
         return allAssignments;
     }
 
-    public MutableLiveData<List<Assignment>> getListOfCanvasAssignments(Course course) {
-        listOfCanvasAssignmentsByCourse = assignmentRepository.getListOfCanvasAssignmentsByCourse(course);
+    public MutableLiveData<List<Assignment>> getListOfCanvasAssignments(List<Course> courses) {
+        listOfCanvasAssignmentsByCourse = assignmentRepository.getListOfCanvasAssignmentsByCourse(courses);
         return listOfCanvasAssignmentsByCourse;
     }
 }
