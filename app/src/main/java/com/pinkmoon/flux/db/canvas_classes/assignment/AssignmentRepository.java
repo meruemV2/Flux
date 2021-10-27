@@ -45,9 +45,6 @@ public class AssignmentRepository {
     public static final String url = "https://canvas.instructure.com/api/v1/courses/";
     public static final String accessToken = "10284~nqtIdmzKxZtdTw324H6HQ3zZlG9TJSPNqagCfIlgjPwiErZttFv5Yj1ticxUT0xN";
 
-    //private List<String> pulledAssignmentIds = new ArrayList<>();
-    private HashMap<String, Boolean> pulledAssignmentIds = new HashMap<>();
-
     public AssignmentRepository(Application application){
         FluxDB fluxDB = FluxDB.getInstance(application);
 
@@ -136,29 +133,7 @@ public class AssignmentRepository {
                 @Override
                 public void onResponse(JSONArray response) {
                     List<Assignment> canvasAssignmentList = convertJSONToListOfObject(response);
-                    // keep a local list of unique assignments to insert to the observer at the end of this logic
-                    List<Assignment> canvasUniqueAss = new ArrayList<>();
-                    // fill a hashmap with every assignment id ever, and set its value to false (which denotes we
-                    // have not inserted this assignment before, if we have, it will be set to true)
-                    for (Assignment assignment: canvasAssignmentList) {
-                        pulledAssignmentIds.putIfAbsent(assignment.getAssignmentId(), false);
-                    }
-                    // iterate through the response list (API result that is) of assignments,
-                    for (Assignment a: canvasAssignmentList) {
-                        // if we find that a key with the assignment id at this index exists within our global hashmap...
-                        if(pulledAssignmentIds.containsKey(a.getAssignmentId())){
-                            // ...and if we find that the corresponding value is false
-                            if(!pulledAssignmentIds.get(a.getAssignmentId())){
-                                // then we can add it to our unique assignment list, and set our
-                                // respective flag within our hashmap to true, since we have inserted it
-                                // into the unique assignment list once
-                                canvasUniqueAss.add(a);
-                                pulledAssignmentIds.put(a.getAssignmentId(), true);
-                            }
-                        }
-                    }
-                    // update the observer mutable live data object with the unique assignment list
-                    listOfCanvasAssignmentsByCourse.setValue(canvasUniqueAss);
+                    listOfCanvasAssignmentsByCourse.setValue(canvasAssignmentList);
                 }
             }, error -> {
                 Toast.makeText(application, "ERROR: Volley could not satisfy the request for ASSIGNMENTS", Toast.LENGTH_SHORT).show();

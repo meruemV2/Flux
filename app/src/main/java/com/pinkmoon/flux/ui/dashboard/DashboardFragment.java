@@ -61,14 +61,10 @@ public class DashboardFragment extends Fragment {
 
     // Local vars
     private DashboardViewModel dashboardViewModel;
-    public static final String accessToken = "10284~nqtIdmzKxZtdTw324H6HQ3zZlG9TJSPNqagCfIlgjPwiErZttFv5Yj1ticxUT0xN";
     private LocalDate selectedDate;
 
     private CourseViewModel courseViewModel;
     private AssignmentViewModel assignmentViewModel;
-
-    private List<Course> coursesFromCanvas = new ArrayList<>();
-    private List<Assignment> assignmentsFromCanvas = new ArrayList<>();
 
     private List<Course> localCourses = new ArrayList<>();
     private List<Assignment> localAssignments = new ArrayList<>();
@@ -132,54 +128,24 @@ public class DashboardFragment extends Fragment {
     }
 
     private void loadCanvasCourses() {
-        courseViewModel.getListOfCanvasCourses().removeObservers(getViewLifecycleOwner());
         courseViewModel.getListOfCanvasCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
             @Override
             public void onChanged(List<Course> courses) {
                 if(getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
-                    for (int i = 0; i < courses.size(); i++) {
-                        //coursesFromCanvas = courses;
-
-                        // check if the current course object is in the local database
-                        boolean matchFound = false;
-                        for (int j = 0; j < localCourses.size(); j++) {
-                            if(courses.get(i).getCourseId().equals(localCourses.get(j).getCourseId())){
-                                matchFound = true;
-                                break;
-                            }
-                        }
-                        // insert Canvas course into the local database, only if it's not already in
-                        if(!matchFound){
-                            courseViewModel.insertCourse(courses.get(i));
-                        }
-                    }
+                    courseViewModel.insertCourse(courses.toArray(courses.toArray(new Course[0])));
                     loadCanvasAssignments(courses);
-                    //srlRefreshHolder.setRefreshing(false);
                 }
             }
         });
     }
 
     private void loadCanvasAssignments(List<Course> courses){
-        assignmentViewModel.getListOfCanvasAssignments(courses).removeObservers(getViewLifecycleOwner());
         assignmentViewModel.getListOfCanvasAssignments(courses).observe(getViewLifecycleOwner(),
                 new Observer<List<Assignment>>() {
             @Override
             public void onChanged(List<Assignment> assignments) {
                 if(getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
-
-                    boolean matchFound = false;
-                    for (int i = 0; i < assignments.size(); i++) {
-                        for (int j = 0; j < localAssignments.size(); j++) {
-                            if(assignments.get(i).getAssignmentId().equals(localAssignments.get(j).getAssignmentId())){
-                                matchFound = true;
-                                break;
-                            }
-                        }
-                        if(!matchFound){
-                            assignmentViewModel.insertAssignment(assignments.get(i));
-                        }
-                    }
+                    assignmentViewModel.insertAssignment(assignments.toArray(new Assignment[0]));
                     srlRefreshHolder.setRefreshing(false);
                 }
             }

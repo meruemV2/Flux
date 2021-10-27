@@ -1,5 +1,6 @@
 package com.pinkmoon.flux.API;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -11,10 +12,9 @@ import java.util.List;
 public class Assignment
 {
 
-    @PrimaryKey(autoGenerate = true)
-    private int primId;
-
+    @PrimaryKey(autoGenerate = false)
     @SerializedName("id")
+    @NonNull
     private String assignmentId;
 
     @SerializedName("name")
@@ -26,20 +26,13 @@ public class Assignment
     @SerializedName("due_at")
     private String assignmentDueDate;
 
-    public Assignment(String assignmentId, String assignmentName, String assignmentCourseId, String assignmentDueDate) {
+    public Assignment(@NonNull String assignmentId, String assignmentName, String assignmentCourseId, String assignmentDueDate) {
         this.assignmentId = assignmentId;
         this.assignmentName = assignmentName;
         this.assignmentCourseId = assignmentCourseId;
         this.assignmentDueDate = assignmentDueDate;
     }
 
-    public int getPrimId() {
-        return primId;
-    }
-
-    public void setPrimId(int primId) {
-        this.primId = primId;
-    }
 
     public String getAssignmentId() {
         return assignmentId;
