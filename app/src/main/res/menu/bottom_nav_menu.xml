@@ -7,9 +7,9 @@
         android:title="@string/title_dashboard" />
 
     <item
-        android:id="@+id/navigation_tasks"
+        android:id="@+id/studyFragment"
         android:icon="@drawable/ic_baseline_task_black"
-        android:title="@string/title_tasks" />
+        android:title="@string/title_study" />
 
     <item
         android:id="@+id/navigation_notifications"

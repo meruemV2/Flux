@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.tasks.AddEditTaskFragment">
+
+
+    <LinearLayout
+        android:id="@+id/ll_fragment_settings_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_fragment_settings_canvas_token"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".90"
+            android:hint="@string/str_canvas_token"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_fragment_settings_save_token"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".1"
+            app:drawableEndCompat="@drawable/ic_baseline_check_24"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_settings_fragment_canvas_sync_freq_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/str_canvas_import_frequency"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintTop_toBottomOf="@id/ll_fragment_settings_holder"/>
+
+    <RadioGroup
+        android:id="@+id/rg_fragment_settings_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_settings_fragment_canvas_sync_freq_title">
+
+        <RadioButton
+            android:id="@+id/rad_btn_fragment_settings_daily"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/str_daily"/>
+
+        <RadioButton
+            android:id="@+id/rad_btn_fragment_settings_weekly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/str_weekly"/>
+
+        <RadioButton
+            android:id="@+id/rad_btn_fragment_settings_never"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/str_never"/>
+
+    </RadioGroup>
+
+    <Switch
+        android:id="@+id/switch_fragment_settings_dark_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintTop_toBottomOf="@id/rg_fragment_settings_group"
+        android:text="@string/str_dark_mode"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

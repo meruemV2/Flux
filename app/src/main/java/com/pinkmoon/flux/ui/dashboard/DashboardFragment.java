@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -27,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.pinkmoon.flux.R;
 import com.pinkmoon.flux.API.Assignment;
@@ -34,6 +36,7 @@ import com.pinkmoon.flux.API.Course;
 import com.pinkmoon.flux.db.canvas_classes.assignment.AssignmentViewModel;
 import com.pinkmoon.flux.db.canvas_classes.course.CourseViewModel;
 import com.pinkmoon.flux.ui.dashboard.calendar.CalendarAdapter;
+import com.pinkmoon.flux.ui.tasks.TasksFragmentDirections;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +58,8 @@ public class DashboardFragment extends Fragment {
     private TextView tvCourseTest, tvAssignmentTest;
     private ProgressBar progAPILoad;
     private SwipeRefreshLayout srlRefreshHolder;
+
+    private FloatingActionButton fabAddNewTask;
 
     // top calendar controls
     private Button btnPrevMonth, btnNextMonth;
@@ -168,9 +173,8 @@ public class DashboardFragment extends Fragment {
         progAPILoad = view.findViewById(R.id.prog_fragment_dashboard_api_load);
 
         srlRefreshHolder = view.findViewById(R.id.srl_fragment_dashboard_refresh_holder);
-        
-        courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
-        assignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
+
+        fabAddNewTask = view.findViewById(R.id.fab_fragment_dashboard_add_new_task);
     }
 
     @Override
@@ -240,6 +244,12 @@ public class DashboardFragment extends Fragment {
                 //Starts the Asynchronous API Calls
                 loadCanvasCourses();
             }
+        });
+
+        fabAddNewTask.setOnClickListener(view -> {
+            DashboardFragmentDirections.ActionNavigationDashboardToAddEditTaskFragment action =
+                    DashboardFragmentDirections.actionNavigationDashboardToAddEditTaskFragment();
+            Navigation.findNavController(view).navigate(action);
         });
     }
 }

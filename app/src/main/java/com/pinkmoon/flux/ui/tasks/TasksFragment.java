@@ -21,6 +21,10 @@ import com.pinkmoon.flux.db.category.CategoryViewModel;
 import com.pinkmoon.flux.db.task.Task;
 import com.pinkmoon.flux.db.task.TaskViewModel;
 
+// TODO - this fragment may be deleted later, as I think it may be best to utilize
+//  a FAB from the Dashboard fragment that allows us to create a new task, and
+//  since we are displaying those tasks on the CalendarView, it is best to do away with this.
+//  For now, keep until we are sure we want this gone.
 public class TasksFragment extends Fragment {
 
     // Widgets
@@ -77,19 +81,6 @@ public class TasksFragment extends Fragment {
                     TasksFragmentDirections.actionNavigationTasksToAddEditTaskFragment();
             Navigation.findNavController(view).navigate(action);
         });
-    }
-
-    // TODO remove this function, it is just meant to test the DB without UI input
-    private void runDBTest() {
-        
-        categoryViewModel.insertCategory(new Category("Assignments"));
-        taskViewModel.insertTask(new Task(1,
-                "COP4521 - Assignment 3",
-                "Database set up with Python.",
-                "09-12-2021 22:59:59",
-                false));
-
-        Toast.makeText(getContext(), "Tests complete. Check DB.", Toast.LENGTH_SHORT).show();
     }
 
     @Override

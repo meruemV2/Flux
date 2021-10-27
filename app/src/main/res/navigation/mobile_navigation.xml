@@ -9,13 +9,20 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.pinkmoon.flux.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_navigation_dashboard_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/slide_out_bottom"
+            app:popExitAnim="@anim/slide_out_bottom" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_tasks"
         android:name="com.pinkmoon.flux.ui.tasks.TasksFragment"
         android:label="@string/title_tasks"
-        tools:layout="@layout/fragment_tasks" >
+        tools:layout="@layout/fragment_tasks">
         <action
             android:id="@+id/action_navigation_tasks_to_addEditTaskFragment"
             app:destination="@id/addEditTaskFragment"
@@ -76,4 +83,14 @@
             app:argType="string"
             android:defaultValue=" " />
     </dialog>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.pinkmoon.flux.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/studyFragment"
+        android:name="com.pinkmoon.flux.ui.study.StudyFragment"
+        android:label="@string/title_study"
+        tools:layout="@layout/fragment_study" />
 </navigation>

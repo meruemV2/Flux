@@ -2,7 +2,9 @@
     <string name="app_name">Flux</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_tasks">Tasks</string>
+    <string name="title_study">Study</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_settings">Settings</string>
 
     <!-- fragment_tasks -->
     <string name="str_add_new_task">Add new task</string>
@@ -19,8 +21,16 @@
 
     <string name="str_fragment_title_add_edit_task_task_name">Name</string>
     <string name="str_fragment_title_add_edit_task_task_description">Description</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="button_save_all">Save</string>
+
+    <!-- SettingsFragment -->
+    <string name="str_canvas_token">Input your Canvas token</string>
+    <string name="str_dark_mode">Toggle dark mode</string>
+    <string name="str_canvas_import_frequency">Select below how often you would like to automatically
+        sync your courses from Canvas</string>
+    <string name="str_daily">Daily</string>
+    <string name="str_weekly">Weekly</string>
+    <string name="str_never">Never</string>
 
 </resources>

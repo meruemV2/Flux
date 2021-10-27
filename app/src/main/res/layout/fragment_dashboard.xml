@@ -168,5 +168,16 @@
         android:layout_marginBottom="55dp"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_fragment_dashboard_add_new_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/str_add_new_task"
+        android:src="@drawable/ic_add_black_24dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

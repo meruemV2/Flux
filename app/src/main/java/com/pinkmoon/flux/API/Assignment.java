@@ -1,6 +1,7 @@
 package com.pinkmoon.flux.API;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -26,11 +27,16 @@ public class Assignment
     @SerializedName("due_at")
     private String assignmentDueDate;
 
-    public Assignment(@NonNull String assignmentId, String assignmentName, String assignmentCourseId, String assignmentDueDate) {
+    @ColumnInfo(defaultValue = "false")
+    private boolean isComplete;
+
+    public Assignment(@NonNull String assignmentId, String assignmentName, String assignmentCourseId,
+                      String assignmentDueDate, Boolean isComplete) {
         this.assignmentId = assignmentId;
         this.assignmentName = assignmentName;
         this.assignmentCourseId = assignmentCourseId;
         this.assignmentDueDate = assignmentDueDate;
+        this.isComplete = isComplete;
     }
 
 
@@ -64,5 +70,13 @@ public class Assignment
 
     public void setAssignmentDueDate(String assignmentDueDate) {
         this.assignmentDueDate = assignmentDueDate;
+    }
+
+    public Boolean getComplete() {
+        return isComplete;
+    }
+
+    public void setComplete(Boolean complete) {
+        isComplete = complete;
     }
 }
