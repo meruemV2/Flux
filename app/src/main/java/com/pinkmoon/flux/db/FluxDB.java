@@ -60,8 +60,5 @@ public abstract class FluxDB extends RoomDatabase {
         }
         return instance;
     }
-
-
-
     // Migrations can be added below this line if they are needed later
 }
