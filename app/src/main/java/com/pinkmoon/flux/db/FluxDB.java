@@ -15,6 +15,7 @@ import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignme
 import com.pinkmoon.flux.db.canvas_classes.quiz.QuizDao;
 import com.pinkmoon.flux.db.category.Category;
 import com.pinkmoon.flux.db.category.CategoryDao;
+import com.pinkmoon.flux.db.settings.Settings;
 import com.pinkmoon.flux.db.settings.SettingsDao;
 import com.pinkmoon.flux.db.task.Task;
 import com.pinkmoon.flux.db.task.TaskDao;
@@ -25,6 +26,7 @@ import com.pinkmoon.flux.db.task.TaskDao;
         Course.class,
         CourseAssignmentJoin.class,
         Task.class,
+        Settings.class,
         }, version = 1)
 public abstract class FluxDB extends RoomDatabase {
 
