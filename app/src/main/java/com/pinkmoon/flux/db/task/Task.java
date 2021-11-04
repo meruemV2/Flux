@@ -22,6 +22,7 @@ public class Task {
     @PrimaryKey(autoGenerate = true)
     private int taskId;
 
+    // Test commit
     private int taskCategoryIdFk;
 
     private String taskName;
