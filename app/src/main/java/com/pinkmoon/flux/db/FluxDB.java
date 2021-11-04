@@ -26,6 +26,7 @@ import com.pinkmoon.flux.db.task.TaskDao;
         Course.class,
         CourseAssignmentJoin.class,
         Task.class,
+        Quiz.class,
         Settings.class,
         }, version = 1)
 public abstract class FluxDB extends RoomDatabase {
