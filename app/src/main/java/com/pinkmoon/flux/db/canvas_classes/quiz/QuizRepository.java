@@ -130,7 +130,7 @@ public class QuizRepository
                 @Override
                 public void onResponse(JSONArray response)
                 {
-                    List<Quiz> canvasQuizList = convertJSONToListOfObject(response);
+                    List<Quiz> canvasQuizList = convertJSONToListOfObject(response, course.getCourseId());
                     listOfCanvasQuizzesByCourse.setValue(canvasQuizList);
                 }
             }, error ->
@@ -150,7 +150,7 @@ public class QuizRepository
         }
     }
 
-    private List<Quiz> convertJSONToListOfObject(JSONArray response)
+    private List<Quiz> convertJSONToListOfObject(JSONArray response, String courseId)
     {
         List<Quiz> list = new ArrayList<>();
         for (int i = 0; i < response.length(); i++)
@@ -160,6 +160,7 @@ public class QuizRepository
                 JSONObject singleQuiz = response.getJSONObject(i);
                 Gson gson = new Gson();
                 Quiz quiz = gson.fromJson(singleQuiz.toString(), Quiz.class);
+                quiz.setQuizCourseId(courseId);
                 if(quiz.getQuizName() != null && quiz.getQuizId() != null)
                 {
                     list.add(quiz);
