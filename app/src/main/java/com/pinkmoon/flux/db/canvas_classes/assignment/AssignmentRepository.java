@@ -17,16 +17,27 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.pinkmoon.flux.API.Assignment;
 import com.pinkmoon.flux.API.Course;
+import com.pinkmoon.flux.FluxDate;
 import com.pinkmoon.flux.db.FluxDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Handles all operations that will interact with the DB and API.
@@ -156,6 +167,7 @@ public class AssignmentRepository {
                 JSONObject singleAssignment = response.getJSONObject(i);
                 Gson gson = new Gson();
                 Assignment assignment = gson.fromJson(singleAssignment.toString(), Assignment.class);
+                assignment.setAssignmentDueDate(FluxDate.convertToLocalTime(assignment.getAssignmentDueDate()));
                 if(assignment.getAssignmentName() != null && assignment.getAssignmentId() != null){
                     list.add(assignment);
                 }else{

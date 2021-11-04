@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp"
+    app:cardBackgroundColor="#00000000"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+    <TextView
+        android:id="@+id/tv_item_course_assignment_join_course_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="(CEN4090L-0001.fa21) Software Engineering Capstone Project"
+        android:textColor="@color/grassy"
+        android:textSize="12sp"
+        android:layout_weight=".5"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="12dp">
+
+        <TextView
+            android:id="@+id/tv_item_course_assignment_join_assignment_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Test Plan: Deliverable VII"
+            android:textColor="@color/garnet"
+            android:textSize="12sp"
+            android:layout_weight=".5"/>
+
+
+        <TextView
+            android:id="@+id/tv_item_course_assignment_join_assignment_due_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Nov 11 2021 - 10:59:00PM"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            android:layout_weight=".5"/>
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
