@@ -233,7 +233,7 @@ public class DashboardFragment extends Fragment {
                 }
             }
         });
-        // update the due items
+        // update the due items.
         //calendarAdapter.setAllAssignments(localAssignments);
 
         rvDayDetails.setLayoutManager(new LinearLayoutManager(getActivity()));
