@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase;
 
 import com.pinkmoon.flux.API.Assignment;
 import com.pinkmoon.flux.API.Course;
+import com.pinkmoon.flux.API.Quiz;
 import com.pinkmoon.flux.db.canvas_classes.assignment.AssignmentDao;
 import com.pinkmoon.flux.db.canvas_classes.course.CourseDao;
 import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoin;
