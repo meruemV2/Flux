@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -30,11 +32,15 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
+import com.pinkmoon.flux.FluxDate;
 import com.pinkmoon.flux.R;
 import com.pinkmoon.flux.API.Assignment;
 import com.pinkmoon.flux.API.Course;
 import com.pinkmoon.flux.db.canvas_classes.assignment.AssignmentViewModel;
 import com.pinkmoon.flux.db.canvas_classes.course.CourseViewModel;
+import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoin;
+import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoinAdapter;
+import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoinViewModel;
 import com.pinkmoon.flux.ui.dashboard.calendar.CalendarAdapter;
 import com.pinkmoon.flux.ui.tasks.TasksFragmentDirections;
 
@@ -54,7 +60,7 @@ import java.util.Map;
 public class DashboardFragment extends Fragment {
     // Widgets
     private TextView monthYearText;
-    private RecyclerView calendarRecyclerView;
+    private RecyclerView calendarRecyclerView, rvDayDetails;
     private TextView tvCourseTest, tvAssignmentTest;
     private ProgressBar progAPILoad;
     private SwipeRefreshLayout srlRefreshHolder;
@@ -62,7 +68,10 @@ public class DashboardFragment extends Fragment {
     private FloatingActionButton fabAddNewTask;
 
     // top calendar controls
+    private CalendarAdapter calendarAdapter;
     private Button btnPrevMonth, btnNextMonth;
+    // calendar holder
+    private LinearLayout llCalendarHolder;
 
     // Local vars
     private DashboardViewModel dashboardViewModel;
@@ -70,16 +79,29 @@ public class DashboardFragment extends Fragment {
 
     private CourseViewModel courseViewModel;
     private AssignmentViewModel assignmentViewModel;
+    private CourseAssignmentJoinViewModel courseAssignmentJoinViewModel;
 
     private List<Course> localCourses = new ArrayList<>();
     private List<Assignment> localAssignments = new ArrayList<>();
     private boolean localCoursesLoaded, localAssignmentsLoaded = false;
 
+    // screen's dimensions
+    int sWidth;
+    int sHeight;
+
+    private CourseAssignmentJoinAdapter courseAssignmentJoinAdapter;
+
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
         assignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
+        courseAssignmentJoinViewModel = new ViewModelProvider(this).get(CourseAssignmentJoinViewModel.class);
 
+        // get the device dimensions to change the display constraints dynamically
+        sWidth = getContext().getResources().getDisplayMetrics().widthPixels;
+        sHeight = getContext().getResources().getDisplayMetrics().heightPixels;
+
+        courseAssignmentJoinAdapter = new CourseAssignmentJoinAdapter();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -119,6 +141,7 @@ public class DashboardFragment extends Fragment {
                 localAssignments = assignments;
                 localAssignmentsLoaded = true;
                 checkToEnableSwipeRefresh();
+                calendarAdapter.setAllAssignments(assignments); // set the indicators on the calendar
                 Toast.makeText(getContext(), "Local assignments updated.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -163,12 +186,14 @@ public class DashboardFragment extends Fragment {
      */
     private void defineWidgets(View view) {
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
+        rvDayDetails = view.findViewById(R.id.rv_fragment_dashboard_day_details);
         monthYearText = view.findViewById(R.id.monthYearTV);
-        tvCourseTest = view.findViewById(R.id.tv_fragment_dashboard_course_test);
-        tvAssignmentTest = view.findViewById(R.id.tv_fragment_dashboard_course_assignment);
 
         btnPrevMonth = view.findViewById(R.id.btn_fragment_dashboard_prev_month);
         btnNextMonth = view.findViewById(R.id.btn_fragment_dashboard_next_month);
+
+        llCalendarHolder = view.findViewById(R.id.ll_fragment_dashboard_calendar_holder);
+        llCalendarHolder.setLayoutParams(new LinearLayout.LayoutParams(sWidth, sHeight));
 
         progAPILoad = view.findViewById(R.id.prog_fragment_dashboard_api_load);
 
@@ -184,9 +209,9 @@ public class DashboardFragment extends Fragment {
 
     private void setCalendarViews() {
         // month view
-        monthYearText.setText(monthYearFromDate(selectedDate));
-        ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth);
+        monthYearText.setText(FluxDate.monthYearFromDate(selectedDate));
+        ArrayList<String> daysInMonth = FluxDate.daysInMonthArray(selectedDate);
+        calendarAdapter = new CalendarAdapter(daysInMonth, FluxDate.monthYearFromDate(selectedDate));
 
         // rv stuff
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7); // 7 columns in the rv
@@ -196,35 +221,24 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onItemClick(int position, String dayText) {
                 if(!dayText.equals(" ")){
-                    String m = dayText + " " + monthYearFromDate(selectedDate);
-                    Toast.makeText(getContext(), m, Toast.LENGTH_SHORT).show();
+                    courseAssignmentJoinViewModel
+                            .getAssignmentsByDueDate(FluxDate.formatDateForDB(selectedDate, dayText))
+                            .observe(getViewLifecycleOwner(), new Observer<List<CourseAssignmentJoin>>() {
+                                @Override
+                                public void onChanged(List<CourseAssignmentJoin> courseAssignmentJoins) {
+                                    courseAssignmentJoinAdapter
+                                            .setAssignmentsByDueDate(courseAssignmentJoins);
+                                }
+                            });
                 }
             }
         });
-    }
+        // update the due items
+        //calendarAdapter.setAllAssignments(localAssignments);
 
-    private ArrayList<String> daysInMonthArray(LocalDate selectedDate) {
-        ArrayList<String> daysInMonthArray = new ArrayList<>();
-        YearMonth yearMonth = YearMonth.from(selectedDate);
-
-        int daysInMonth = yearMonth.lengthOfMonth();
-
-        LocalDate firstOfMonth = selectedDate.withDayOfMonth(1); // get first day of the month
-        int dayOfWeek = firstOfMonth.getDayOfWeek().getValue();
-
-        for (int i = 1; i < 42; i++){
-            if(i <= dayOfWeek || i > daysInMonth + dayOfWeek){
-                daysInMonthArray.add(" "); // we add a blank
-            }else{
-                daysInMonthArray.add(String.valueOf(i - dayOfWeek));
-            }
-        }
-        return daysInMonthArray;
-    }
-
-    private String monthYearFromDate(LocalDate date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
-        return date.format(formatter);
+        rvDayDetails.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvDayDetails.setHasFixedSize(true);
+        rvDayDetails.setAdapter(courseAssignmentJoinAdapter);
     }
 
     private void setOnClickListeners() {

@@ -11,6 +11,8 @@ import com.pinkmoon.flux.API.Course;
 import com.pinkmoon.flux.db.canvas_classes.assignment.AssignmentDao;
 import com.pinkmoon.flux.db.canvas_classes.course.CourseDao;
 import com.pinkmoon.flux.db.canvas_classes.quiz.QuizDao;
+import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoin;
+import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoinDao;
 import com.pinkmoon.flux.db.category.Category;
 import com.pinkmoon.flux.db.category.CategoryDao;
 import com.pinkmoon.flux.db.task.Task;
@@ -20,6 +22,7 @@ import com.pinkmoon.flux.db.task.TaskDao;
         Assignment.class,
         Category.class,
         Course.class,
+        CourseAssignmentJoin.class,
         Task.class,
         }, version = 1)
 public abstract class FluxDB extends RoomDatabase {
@@ -32,6 +35,12 @@ public abstract class FluxDB extends RoomDatabase {
     public abstract CourseDao           courseDao();
     public abstract TaskDao             taskDao();
     public abstract QuizDao             quizDao();
+    public abstract AssignmentDao           assignmentDao();
+    public abstract CategoryDao             categoryDao();
+    public abstract CourseDao               courseDao();
+    public abstract CourseAssignmentJoinDao courseAssignmentJoinDao();
+    public abstract TaskDao                 taskDao();
+>>>>>>> feature-calendar-with-recycler-view
 
     /**
      * Forms a single instance of the database object that will

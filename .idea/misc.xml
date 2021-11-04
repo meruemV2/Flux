@@ -6,6 +6,7 @@
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/drawable/button_reminder_main.xml" value="0.15208333333333332" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/drawable/button_reminder_pressed.xml" value="0.15208333333333332" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/drawable/button_reminder_ready.xml" value="0.15208333333333332" />
+        <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/drawable/ic_circle_indigo.xml" value="0.11979166666666667" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/calendar_day_layout.xml" value="0.1328125" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/fragment_add_edit_category.xml" value="0.15476190476190477" />
@@ -17,7 +18,8 @@
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/fragment_settings.xml" value="0.2635416666666667" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/fragment_study.xml" value="0.1875" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/fragment_tasks.xml" value="0.22" />
-        <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/item_calendar_cell.xml" value="0.16" />
+        <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/item_calendar_cell.xml" value="0.33" />
+        <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/layout/item_course_assignment_join.xml" value="0.5" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/menu/menu_options_general_save.xml" value="0.31333333333333335" />
         <entry key="..\:/Users/Cristian/pink_moon_apps/Flux/app/src/main/res/menu/menu_options_global.xml" value="0.1875" />
