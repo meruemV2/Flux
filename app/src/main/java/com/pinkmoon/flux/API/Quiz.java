@@ -17,7 +17,7 @@ public class Quiz
     @NonNull
     private String quizId;
 
-    @SerializedName("name")
+    @SerializedName("title")
     private String quizName;
 
     @SerializedName("course_id")

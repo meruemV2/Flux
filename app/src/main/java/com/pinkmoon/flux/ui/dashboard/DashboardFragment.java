@@ -32,6 +32,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
+import com.pinkmoon.flux.API.Quiz;
 import com.pinkmoon.flux.FluxDate;
 import com.pinkmoon.flux.R;
 import com.pinkmoon.flux.API.Assignment;
@@ -41,6 +42,7 @@ import com.pinkmoon.flux.db.canvas_classes.course.CourseViewModel;
 import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoin;
 import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoinAdapter;
 import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoinViewModel;
+import com.pinkmoon.flux.db.canvas_classes.quiz.QuizViewModel;
 import com.pinkmoon.flux.ui.dashboard.calendar.CalendarAdapter;
 import com.pinkmoon.flux.ui.tasks.TasksFragmentDirections;
 
@@ -80,6 +82,7 @@ public class DashboardFragment extends Fragment {
     private CourseViewModel courseViewModel;
     private AssignmentViewModel assignmentViewModel;
     private CourseAssignmentJoinViewModel courseAssignmentJoinViewModel;
+    private QuizViewModel quizViewModel;
 
     private List<Course> localCourses = new ArrayList<>();
     private List<Assignment> localAssignments = new ArrayList<>();
@@ -96,6 +99,7 @@ public class DashboardFragment extends Fragment {
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
         assignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
         courseAssignmentJoinViewModel = new ViewModelProvider(this).get(CourseAssignmentJoinViewModel.class);
+        quizViewModel = new ViewModelProvider(this).get(QuizViewModel.class);
 
         // get the device dimensions to change the display constraints dynamically
         sWidth = getContext().getResources().getDisplayMetrics().widthPixels;
@@ -162,6 +166,7 @@ public class DashboardFragment extends Fragment {
                 if(getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
                     courseViewModel.insertCourse(courses.toArray(courses.toArray(new Course[0])));
                     loadCanvasAssignments(courses);
+                    loadCanvasQuizzes(courses);
                 }
             }
         });
@@ -174,10 +179,20 @@ public class DashboardFragment extends Fragment {
             public void onChanged(List<Assignment> assignments) {
                 if(getViewLifecycleOwner().getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
                     assignmentViewModel.insertAssignment(assignments.toArray(new Assignment[0]));
-                    srlRefreshHolder.setRefreshing(false);
                 }
             }
         });
+    }
+
+    private void loadCanvasQuizzes(List<Course> courses) {
+        quizViewModel.getListOfCanvasQuizzes(courses).observe(getViewLifecycleOwner(),
+                new Observer<List<Quiz>>() {
+                    @Override
+                    public void onChanged(List<Quiz> quizzes) {
+                        quizViewModel.insertQuiz(quizzes.toArray(quizzes.toArray(new Quiz[0])));
+                        srlRefreshHolder.setRefreshing(false);
+                    }
+                });
     }
 
     /**
