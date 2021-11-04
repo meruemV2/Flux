@@ -15,6 +15,7 @@ import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignme
 import com.pinkmoon.flux.db.canvas_classes.quiz.QuizDao;
 import com.pinkmoon.flux.db.category.Category;
 import com.pinkmoon.flux.db.category.CategoryDao;
+import com.pinkmoon.flux.db.settings.SettingsDao;
 import com.pinkmoon.flux.db.task.Task;
 import com.pinkmoon.flux.db.task.TaskDao;
 
@@ -36,6 +37,7 @@ public abstract class FluxDB extends RoomDatabase {
     public abstract CourseAssignmentJoinDao courseAssignmentJoinDao();
     public abstract TaskDao                 taskDao();
     public abstract QuizDao                 quizDao();
+    public abstract SettingsDao             settingsDao();
 
     /**
      * Forms a single instance of the database object that will
@@ -55,6 +57,7 @@ public abstract class FluxDB extends RoomDatabase {
         }
         return instance;
     }
+
 
 
     // Migrations can be added below this line if they are needed later
