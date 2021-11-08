@@ -11,24 +11,23 @@ import com.google.gson.annotations.SerializedName;
 public class Settings
 {
     @PrimaryKey(autoGenerate = true)
-    private String settingsId;
+    private int settingsId;
 
     private String userAccessToken;
 
     @ColumnInfo(defaultValue = "D")
     private Character canvasSyncFrequency;
 
-    public Settings(String settingsId, String userAccessToken, Character canvasSyncFrequency) {
-        this.settingsId = settingsId;
+    public Settings(String userAccessToken, Character canvasSyncFrequency) {
         this.userAccessToken = userAccessToken;
         this.canvasSyncFrequency = canvasSyncFrequency;
     }
 
-    public String getSettingsId() {
+    public int getSettingsId() {
         return settingsId;
     }
 
-    public void setSettingsId(String settingsId) {
+    public void setSettingsId(int settingsId) {
         this.settingsId = settingsId;
     }
 

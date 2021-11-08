@@ -1,6 +1,7 @@
 package com.pinkmoon.flux.db.settings;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -9,6 +10,7 @@ import com.pinkmoon.flux.API.Quiz;
 
 import java.util.List;
 
+@Dao
 public interface SettingsDao
 {
     @Insert
