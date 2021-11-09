@@ -9,6 +9,7 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -116,5 +117,32 @@ public class FluxDate {
         } else {
             return "";
         }
+    }
+
+    /**
+     * Used to convert a date in String format to a Calendar object.
+     * This object can then be used to set notifications to trigger
+     * at a designated time in the future, by converting the Calendar
+     * object into milliseconds.
+     * @param dateTime - date string to convert: format of yyyy-MN-dd HH:mm:ss
+     * @return a Calendar object from the passed in parameter.
+     */
+    public static Calendar convertToDateTime(String dateTime){
+        Calendar convertedDateTime = Calendar.getInstance();
+
+        String[] dateTimeSplit = dateTime.split(" ");
+
+        String[] dateSplit = dateTimeSplit[0].split("-");
+        String[] timeSplit = dateTimeSplit[1].split(":");
+
+        convertedDateTime.set(Calendar.MONTH, Integer.parseInt(dateSplit[1]) - 1); // -1 because months are 0th indexed
+        convertedDateTime.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateSplit[2]));
+        convertedDateTime.set(Calendar.YEAR, Integer.parseInt(dateSplit[0]));
+
+        convertedDateTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeSplit[0]));
+        convertedDateTime.set(Calendar.MINUTE, Integer.parseInt(timeSplit[1]));
+        convertedDateTime.set(Calendar.SECOND, 0);
+
+        return convertedDateTime;
     }
 }

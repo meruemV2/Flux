@@ -1,7 +1,6 @@
 package com.pinkmoon.flux.ui.dashboard;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,16 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
 import com.pinkmoon.flux.API.Quiz;
 import com.pinkmoon.flux.FluxDate;
 import com.pinkmoon.flux.R;
@@ -44,20 +34,10 @@ import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignme
 import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoinViewModel;
 import com.pinkmoon.flux.db.canvas_classes.quiz.QuizViewModel;
 import com.pinkmoon.flux.ui.dashboard.calendar.CalendarAdapter;
-import com.pinkmoon.flux.ui.tasks.TasksFragmentDirections;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class DashboardFragment extends Fragment {
     // Widgets
