@@ -39,7 +39,6 @@ public class Assignment
         this.isComplete = isComplete;
     }
 
-
     public String getAssignmentId() {
         return assignmentId;
     }

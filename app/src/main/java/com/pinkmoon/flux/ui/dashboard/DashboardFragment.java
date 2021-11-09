@@ -115,7 +115,6 @@ public class DashboardFragment extends Fragment {
                 localCourses = courses;
                 localCoursesLoaded = true;
                 checkToEnableSwipeRefresh();
-                Toast.makeText(getContext(), "Local courses updated.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -125,8 +124,6 @@ public class DashboardFragment extends Fragment {
                 localAssignments = assignments;
                 localAssignmentsLoaded = true;
                 checkToEnableSwipeRefresh();
-                calendarAdapter.setAllAssignments(assignments); // set the indicators on the calendar
-                Toast.makeText(getContext(), "Local assignments updated.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -206,7 +203,17 @@ public class DashboardFragment extends Fragment {
         // month view
         monthYearText.setText(FluxDate.monthYearFromDate(selectedDate));
         ArrayList<String> daysInMonth = FluxDate.daysInMonthArray(selectedDate);
-        calendarAdapter = new CalendarAdapter(daysInMonth, FluxDate.monthYearFromDate(selectedDate));
+        calendarAdapter = new CalendarAdapter(daysInMonth, FluxDate.monthFromDate(selectedDate));
+
+        // sets the date for the selected month, in order to set the
+        // correct due date indicators on the calendar
+        assignmentViewModel.getAssignmentsByYearMonth(FluxDate.yearMonthFromDate(selectedDate))
+                .observe(getViewLifecycleOwner(), new Observer<List<Assignment>>() {
+                    @Override
+                    public void onChanged(List<Assignment> assignments) {
+                        calendarAdapter.setAllAssignments(assignments);
+                    }
+                });
 
         // rv stuff
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7); // 7 columns in the rv
@@ -228,8 +235,6 @@ public class DashboardFragment extends Fragment {
                 }
             }
         });
-        // update the due items...
-        //calendarAdapter.setAllAssignments(localAssignments);
 
         rvDayDetails.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvDayDetails.setHasFixedSize(true);

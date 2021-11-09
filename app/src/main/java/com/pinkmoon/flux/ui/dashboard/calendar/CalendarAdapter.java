@@ -50,8 +50,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
     private void setDueDateIndicator(CalendarViewHolder holder, int position) {
         for (Assignment a: allAssignments) {
             if(a.getAssignmentDueDate() != null){
-                if(FluxDate.extractDayFromDate(
-                        a.getAssignmentDueDate()).equals(daysOfMonth.get(position))){
+                if(FluxDate.extractDayFromDate(a.getAssignmentDueDate()).equals(daysOfMonth.get(position))){
                     holder.tvDueDateIndicator.setVisibility(View.VISIBLE);
                 }
             }

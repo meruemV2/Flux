@@ -17,6 +17,7 @@ public class AssignmentViewModel extends AndroidViewModel {
     private AssignmentRepository assignmentRepository;
 
     private LiveData<List<Assignment>> allAssignments;
+    private LiveData<List<Assignment>> assignmentsByYearMonth;
 
     private MutableLiveData<List<Assignment>> listOfCanvasAssignmentsByCourse;
 
@@ -42,6 +43,11 @@ public class AssignmentViewModel extends AndroidViewModel {
 
     public LiveData<List<Assignment>> getAllAssignments() {
         return allAssignments;
+    }
+
+    public LiveData<List<Assignment>> getAssignmentsByYearMonth(String yearMonth){
+        assignmentsByYearMonth = assignmentRepository.getAssignmentsByYearMonth(yearMonth);
+        return assignmentsByYearMonth;
     }
 
     public MutableLiveData<List<Assignment>> getListOfCanvasAssignments(List<Course> courses) {

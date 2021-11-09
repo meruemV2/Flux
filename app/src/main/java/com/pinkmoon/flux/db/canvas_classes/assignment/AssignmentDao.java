@@ -28,4 +28,7 @@ public interface AssignmentDao {
 
     @Query("SELECT * FROM table_assignment")
     LiveData<List<Assignment>> getAllAssignments();
+
+    @Query("SELECT * FROM table_assignment WHERE assignmentDueDate LIKE :yearMonth || '%' ORDER BY assignmentDueDate ASC")
+    LiveData<List<Assignment>> getAssignmentsByYearMonth(String yearMonth);
 }

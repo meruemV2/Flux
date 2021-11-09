@@ -49,6 +49,7 @@ public class AssignmentRepository {
     private AssignmentDao assignmentDao;
 
     private LiveData<List<Assignment>> allAssignments;
+    private LiveData<List<Assignment>> assignmentsByYearMonth;
 
     private Application application; // to be used with Volley for API calls
     public MutableLiveData<List<Assignment>> listOfCanvasAssignmentsByCourse;
@@ -80,6 +81,11 @@ public class AssignmentRepository {
 
     public LiveData<List<Assignment>> getAllAssignments() {
         return allAssignments;
+    }
+
+    public LiveData<List<Assignment>> getAssignmentsByYearMonth(String yearMonth){
+        assignmentsByYearMonth = assignmentDao.getAssignmentsByYearMonth(yearMonth);
+        return assignmentsByYearMonth;
     }
 
     public MutableLiveData<List<Assignment>> getListOfCanvasAssignmentsByCourse(List<Course> courses) {
