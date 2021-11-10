@@ -1,5 +1,10 @@
 package com.pinkmoon.flux.ui.dashboard;
 
+import static android.content.Context.*;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +26,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.pinkmoon.flux.API.Quiz;
 import com.pinkmoon.flux.FluxDate;
+
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import com.pinkmoon.flux.R;
 import com.pinkmoon.flux.API.Assignment;
 import com.pinkmoon.flux.API.Course;
@@ -34,6 +44,9 @@ import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignme
 import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignmentJoinViewModel;
 import com.pinkmoon.flux.db.canvas_classes.quiz.QuizViewModel;
 import com.pinkmoon.flux.ui.dashboard.calendar.CalendarAdapter;
+
+import com.pinkmoon.flux.ui.notifications.AlertReceiver;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -68,11 +81,27 @@ public class DashboardFragment extends Fragment {
     private List<Assignment> localAssignments = new ArrayList<>();
     private boolean localCoursesLoaded, localAssignmentsLoaded = false;
 
+
     // screen's dimensions
     int sWidth;
     int sHeight;
 
     private CourseAssignmentJoinAdapter courseAssignmentJoinAdapter;
+
+
+    // Alarm stuff
+    private AlarmManager alarmManager;
+    private Intent reminderIntent;
+    private PendingIntent pendingIntent;
+
+    //INTENT EXTRAS, Alarm stuff.
+    public static final String EXTRA_REMINDER_TITLE = ".main.EXTRA_REMINDER_TITLE";
+    public static final String EXTRA_REMINDER_BODY = ".main.EXTRA_REMINDER_BODY";
+    public static final String EXTRA_REMINDER_ID =   ".main.EXTRA_REMINDER_ID";
+    public static final String EXTRA_REMINDER_DATE = ".main.EXTRA_REMINDER_DATE";
+    public static final String EXTRA_REMINDER_TIME = ".main.EXTRA_REMINDER_TIME";
+    public static final String EXTRA_REMINDER_STATUS = ".main.EXTRA_REMINDER_STATUS";
+    // onCreate.
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,13 +110,20 @@ public class DashboardFragment extends Fragment {
         courseAssignmentJoinViewModel = new ViewModelProvider(this).get(CourseAssignmentJoinViewModel.class);
         quizViewModel = new ViewModelProvider(this).get(QuizViewModel.class);
 
+
         // get the device dimensions to change the display constraints dynamically
         sWidth = getContext().getResources().getDisplayMetrics().widthPixels;
         sHeight = getContext().getResources().getDisplayMetrics().heightPixels;
 
         courseAssignmentJoinAdapter = new CourseAssignmentJoinAdapter();
+
+        //Alarm stuff.
+        alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+        reminderIntent = new Intent(getActivity(), AlertReceiver.class);
+
     }
 
+    // onCreate VIEW.
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
@@ -129,6 +165,16 @@ public class DashboardFragment extends Fragment {
 
         return view;
     }
+
+    public void reminderFunctionalities(String reminderTitle, String reminderBody, int reminderId){
+        reminderIntent.putExtra(EXTRA_REMINDER_TITLE, reminderTitle);
+        // Reminder intent -- CHECKPOINT
+        reminderIntent.putExtra(EXTRA_REMINDER_BODY, reminderBody);
+        reminderIntent.putExtra(EXTRA_REMINDER_ID, reminderId);
+
+    }
+
+
 
     private void checkToEnableSwipeRefresh() {
         if(localCoursesLoaded && localAssignmentsLoaded){
