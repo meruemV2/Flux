@@ -31,4 +31,7 @@ public interface AssignmentDao {
 
     @Query("SELECT * FROM table_assignment WHERE assignmentDueDate LIKE :yearMonth || '%' ORDER BY assignmentDueDate ASC")
     LiveData<List<Assignment>> getAssignmentsByYearMonth(String yearMonth);
+
+    @Query("UPDATE table_assignment SET isComplete = :reminderStatus WHERE assignmentId = :reminderId")
+    void tagReminderAsComplete(boolean reminderStatus, int reminderId);
 }

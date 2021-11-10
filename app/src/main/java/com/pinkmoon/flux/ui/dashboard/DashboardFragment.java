@@ -310,6 +310,7 @@ public class DashboardFragment extends Fragment {
                                     courseAssignmentJoinAdapter
                                             .setAssignmentsByDueDate(courseAssignmentJoins);
                                     courseAssignmentJoinList = courseAssignmentJoins;
+                                    reminderSetUp();
                                 }
                             });
                 }
