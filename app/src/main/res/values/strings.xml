@@ -15,6 +15,7 @@
         <item>Add New…</item>
     </string-array>
     <string name="str_add_new_reminder">Reminder</string>
+    <string name="str_set_due">Set due date</string>
 
     <!-- fragment_reminder_detail -->
     <string name="str_fragment_reminder_detail_title">Reminder Frequency</string>

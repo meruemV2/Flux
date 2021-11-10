@@ -79,6 +79,16 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
+        android:id="@+id/btn_fragment_add_edit_task_set_due_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_reminder_main"
+        android:text="@string/str_set_due"
+        android:layout_marginTop="12dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintTop_toBottomOf="@id/et_fragment_add_edit_task_description"/>
+
+    <Button
         android:id="@+id/btn_fragment_add_edit_task_reminders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,6 +96,6 @@
         android:text="@string/str_add_new_reminder"
         android:layout_marginTop="12dp"
         android:layout_marginHorizontal="16dp"
-        app:layout_constraintTop_toBottomOf="@id/et_fragment_add_edit_task_description"/>
+        app:layout_constraintTop_toBottomOf="@id/btn_fragment_add_edit_task_set_due_date"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

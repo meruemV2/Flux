@@ -1,5 +1,6 @@
 package com.pinkmoon.flux.ui.tasks;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -18,11 +19,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.datepicker.MaterialStyledDatePickerDialog;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
 import com.pinkmoon.flux.R;
 import com.pinkmoon.flux.db.category.Category;
 import com.pinkmoon.flux.db.category.CategoryViewModel;
@@ -30,8 +36,10 @@ import com.pinkmoon.flux.db.task.Task;
 import com.pinkmoon.flux.db.task.TaskViewModel;
 import com.pinkmoon.flux.ui.categories.AddEditCategoryFragment;
 
+import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class AddEditTaskFragment extends Fragment {
@@ -43,11 +51,14 @@ public class AddEditTaskFragment extends Fragment {
     private TaskViewModel taskViewModel;
     private List<Category> listOfCategories = new ArrayList<>();
     private Category selectedCategory;
+    private int year, month, day, hour, minute;
+    private String selectedDate, selectedTime;
 
     // widgets
     private Spinner spnrCategory;
     private TextInputLayout etTaskName;
     private TextInputLayout etTaskDescription;
+    private Button btnSetDueDate;
     private Button btnReminder;
     private View view; // global for navigation components
     private TextView tvAddNewCategory, tvEditCategory;
@@ -148,6 +159,7 @@ public class AddEditTaskFragment extends Fragment {
         spnrCategory = view.findViewById(R.id.spnr_fragment_add_edit_task_category_holder);
         etTaskName = view.findViewById(R.id.et_fragment_add_edit_task_name);
         etTaskDescription = view.findViewById(R.id.et_fragment_add_edit_task_description);
+        btnSetDueDate = view.findViewById(R.id.btn_fragment_add_edit_task_set_due_date);
         btnReminder = view.findViewById(R.id.btn_fragment_add_edit_task_reminders);
 
         tvAddNewCategory = view.findViewById(R.id.tv_fragment_add_edit_task_add_new_category);
@@ -180,6 +192,10 @@ public class AddEditTaskFragment extends Fragment {
     }
 
     private void setOnClickListeners() {
+        btnSetDueDate.setOnClickListener(v -> {
+            callDatePickerDialog();
+        });
+
         btnReminder.setOnClickListener(v -> {
             Navigation.findNavController(v)
                     .navigate(R.id.action_addEditTaskFragment_to_reminderDetailFragment);
@@ -245,6 +261,38 @@ public class AddEditTaskFragment extends Fragment {
             public void onChanged(Integer integer) {
                 spnrCategory.setSelection(integer, true);
             }
+        });
+    }
+
+    private void callDatePickerDialog(){
+        // Call Date & Time pickers
+        Calendar now = Calendar.getInstance();
+        year = now.get(Calendar.YEAR);
+        month = now.get(Calendar.MONTH);
+        day = now.get(Calendar.DAY_OF_MONTH);
+
+
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        MaterialDatePicker mdp = materialDateBuilder.build();
+        mdp.show(getChildFragmentManager(),"Material date picker from AddEditTaskFragment.java");
+        mdp.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                selectedDate = mdp.getHeaderText();
+                callTimePickerDialog();
+            }
+        });
+    }
+
+    private void callTimePickerDialog(){
+        MaterialTimePicker mtp = new MaterialTimePicker.Builder()
+                .setHour(hour)
+                .setMinute(minute)
+                .build();
+
+        mtp.show(getChildFragmentManager(), "Material time picker from AddEditTaskFragment.java");
+        mtp.addOnPositiveButtonClickListener(v -> {
+            selectedTime = mtp.getHour() + ":" + mtp.getMinute();
         });
     }
 
