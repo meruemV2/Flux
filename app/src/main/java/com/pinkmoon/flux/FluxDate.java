@@ -13,6 +13,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * This class contains several methods to work on and manipulate date-sting objects.
+ */
 public class FluxDate {
 
     // calendar method

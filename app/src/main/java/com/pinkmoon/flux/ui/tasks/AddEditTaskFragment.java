@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -36,6 +37,7 @@ import java.util.List;
 public class AddEditTaskFragment extends Fragment {
 
     // local vars
+    private AddEditTaskFragmentViewModel addEditTaskFragmentViewModel;
     private AddEditTaskFragmentListener mListener;
     private CategoryViewModel categoryViewModel;
     private TaskViewModel taskViewModel;
@@ -48,6 +50,7 @@ public class AddEditTaskFragment extends Fragment {
     private TextInputLayout etTaskDescription;
     private Button btnReminder;
     private View view; // global for navigation components
+    private TextView tvAddNewCategory, tvEditCategory;
 
     public AddEditTaskFragment() {
         // Required empty public constructor
@@ -58,6 +61,32 @@ public class AddEditTaskFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // insert or update the new category name when we resume this fragment
+        String newCatName = AddEditTaskFragmentArgs.fromBundle(getArguments()).getNewCategoryName();
+        boolean isEdit = AddEditTaskFragmentArgs.fromBundle(getArguments()).getIsCategoryEdit();
+        int selectedCategoryId = AddEditTaskFragmentArgs.fromBundle(getArguments()).getSelectedCategoryId();
+        if(!newCatName.trim().isEmpty() && !isEdit){
+            // insert a new category
+            categoryViewModel.insertCategory(new Category(newCatName));
+        }else if(!newCatName.trim().isEmpty() && isEdit && selectedCategoryId != -1){
+            Category updatedCategory = new Category(newCatName);
+            updatedCategory.setCategoryId(selectedCategoryId);
+            categoryViewModel.updateCategory(updatedCategory);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // save the state of views
+        addEditTaskFragmentViewModel.getTaskName().setValue(etTaskName.getEditText().getText().toString().trim());
+        addEditTaskFragmentViewModel.getTaskDescription().setValue(etTaskDescription.getEditText().getText().toString().trim());
     }
 
     @Override
@@ -110,18 +139,9 @@ public class AddEditTaskFragment extends Fragment {
         defineViews(view);
         loadDBData();
         setOnClickListeners();
+        defineObservers();
 
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // insert or update the new category name when we resume this fragment
-        String newCatName = AddEditTaskFragmentArgs.fromBundle(getArguments()).getNewCategoryName();
-        if(!newCatName.trim().isEmpty()){
-            categoryViewModel.insertCategory(new Category(newCatName));
-        }
     }
 
     private void defineViews(View view) {
@@ -130,6 +150,10 @@ public class AddEditTaskFragment extends Fragment {
         etTaskDescription = view.findViewById(R.id.et_fragment_add_edit_task_description);
         btnReminder = view.findViewById(R.id.btn_fragment_add_edit_task_reminders);
 
+        tvAddNewCategory = view.findViewById(R.id.tv_fragment_add_edit_task_add_new_category);
+        tvEditCategory = view.findViewById(R.id.tv_fragment_add_edit_task_edit_category);
+
+        addEditTaskFragmentViewModel = new ViewModelProvider(this).get(AddEditTaskFragmentViewModel.class);
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
     }
@@ -151,7 +175,7 @@ public class AddEditTaskFragment extends Fragment {
         }
         ArrayAdapter<String> arrayAdapter =
                 new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listOfCatNames);
-        arrayAdapter.insert("Add new...", listOfCatNames.size());
+        arrayAdapter.insert("Select a category...", 0);
         spnrCategory.setAdapter(arrayAdapter);
     }
 
@@ -165,24 +189,61 @@ public class AddEditTaskFragment extends Fragment {
         spnrCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i == adapterView.getCount() - 1 && adapterView.getCount() > 1){
+                // set the Fragment ViewModel val
+                addEditTaskFragmentViewModel.getCategorySpinnerPosition().setValue(i);
+                if(i == 0){
                     // Add new...
-                    Navigation.findNavController(view).navigate(R.id.action_addEditTaskFragment_to_addEditCategoryFragment);
+                    tvEditCategory.setVisibility(View.GONE);
+                    tvAddNewCategory.setVisibility(View.VISIBLE);
                 } else {
+                    // Edit existing category
+                    tvEditCategory.setVisibility(View.VISIBLE);
+                    tvAddNewCategory.setVisibility(View.GONE);
                     if (!listOfCategories.isEmpty()) {
-                        selectedCategory = listOfCategories.get(i);
+                        selectedCategory = listOfCategories.get(i - 1);
                     }
-                    // passing it as a SafeArgs argument
-//                    AddEditTaskFragmentDirections.ActionAddEditTaskFragmentToAddEditCategoryFragment action =
-//                            AddEditTaskFragmentDirections.actionAddEditTaskFragmentToAddEditCategoryFragment(selectedCategory.getCategoryName());
-//                    action.setEditCategoryName(selectedCategory.getCategoryName()); // think this is unecessary
-//                    Navigation.findNavController(view).navigate(action);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        tvAddNewCategory.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.action_addEditTaskFragment_to_addEditCategoryFragment);
+        });
+
+        tvEditCategory.setOnClickListener(v -> {
+             // passing it as a SafeArgs argument
+                    AddEditTaskFragmentDirections.ActionAddEditTaskFragmentToAddEditCategoryFragment action =
+                            AddEditTaskFragmentDirections.actionAddEditTaskFragmentToAddEditCategoryFragment();
+                    action.setEditCategoryName(selectedCategory.getCategoryName());
+                    action.setEditCategoryId(selectedCategory.getCategoryId());
+                    Navigation.findNavController(view).navigate(action);
+        });
+    }
+
+    private void defineObservers(){
+        addEditTaskFragmentViewModel.getTaskName().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                etTaskName.getEditText().setText(s);
+            }
+        });
+
+        addEditTaskFragmentViewModel.getTaskDescription().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                etTaskDescription.getEditText().setText(s);
+            }
+        });
+
+        addEditTaskFragmentViewModel.getCategorySpinnerPosition().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                spnrCategory.setSelection(integer, true);
             }
         });
     }

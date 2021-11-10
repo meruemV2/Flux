@@ -24,8 +24,12 @@ public class AddEditCategoryFragment extends DialogFragment {
     // widgets
     private TextInputLayout etCategoryName;
     private TextView btnCancel, btnOkay;
+    private TextView tvHeader;
 
     // local vars
+    private boolean isEdit = false;
+    private int selectedCategoryId = -1;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,10 +45,13 @@ public class AddEditCategoryFragment extends DialogFragment {
         setOnClickListeners(rootView);
 
         // if we are editing, set the existing name here
-        if(!(AddEditCategoryFragmentArgs.fromBundle(getArguments()).getEditCategoryName().isEmpty())){
+        if(!(AddEditCategoryFragmentArgs.fromBundle(getArguments()).getEditCategoryName().equals(" "))){
             etCategoryName.getEditText().setText(
                     AddEditCategoryFragmentArgs.fromBundle(getArguments()).getEditCategoryName()
             );
+            isEdit = true;
+            selectedCategoryId = AddEditCategoryFragmentArgs.fromBundle(getArguments()).getEditCategoryId();
+            tvHeader.setText("Edit existing category");
         }
 
         return rootView;
@@ -57,6 +64,8 @@ public class AddEditCategoryFragment extends DialogFragment {
                 AddEditCategoryFragmentDirections.ActionAddEditCategoryFragmentToAddEditTaskFragment action =
                         AddEditCategoryFragmentDirections.actionAddEditCategoryFragmentToAddEditTaskFragment();
                 action.setNewCategoryName(etCategoryName.getEditText().getText().toString().trim());
+                action.setIsCategoryEdit(isEdit);
+                action.setSelectedCategoryId(selectedCategoryId);
                 NavHostFragment.findNavController(getParentFragment()).navigate(action);
             }else{
                 Toast.makeText(getContext(), "Category name cannot be empty.", Toast.LENGTH_SHORT).show();
@@ -73,6 +82,8 @@ public class AddEditCategoryFragment extends DialogFragment {
 
         btnCancel = view.findViewById(R.id.tv_fragment_add_edit_category_cancel);
         btnOkay = view.findViewById(R.id.tv_fragment_add_edit_category_okay);
+
+        tvHeader = view.findViewById(R.id.tv_fragment_add_edit_category_header);
     }
 
 }

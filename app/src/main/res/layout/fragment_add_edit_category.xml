@@ -8,7 +8,7 @@
     tools:context=".ui.categories.AddEditCategoryFragment">
 
     <TextView
-        android:id="@+id/header"
+        android:id="@+id/tv_fragment_add_edit_category_header"
         android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:paddingHorizontal="12dp"
@@ -31,7 +31,7 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
+        app:layout_constraintTop_toBottomOf="@id/tv_fragment_add_edit_category_header">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"

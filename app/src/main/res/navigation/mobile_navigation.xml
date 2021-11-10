@@ -59,6 +59,14 @@
             android:name="newCategoryName"
             app:argType="string"
             android:defaultValue=" " />
+        <argument
+            android:name="isCategoryEdit"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="selectedCategoryId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/reminderDetailFragment"
@@ -82,6 +90,10 @@
             android:name="editCategoryName"
             app:argType="string"
             android:defaultValue=" " />
+        <argument
+            android:name="editCategoryId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </dialog>
     <fragment
         android:id="@+id/settingsFragment"
