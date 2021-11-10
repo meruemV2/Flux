@@ -1,6 +1,7 @@
 package com.pinkmoon.flux.db.canvas_classes.assignment;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -66,6 +67,19 @@ public class AssignmentRepository {
 
         this.application = application;
     }
+
+    public AssignmentRepository(Context context)
+    {
+        FluxDB fluxDB = FluxDB.getInstance(application);
+
+    }
+
+    public void tagReminderComplete(boolean reminderStatus, int reminderId)
+    {
+        new TagReminderAsCompleteTask(assignmentDao, reminderStatus, reminderId).execute();
+    }
+
+
 
     public void insertAssignment(Assignment... assignment) {
         new InsertAssignmentAsync(assignmentDao).execute(assignment);
@@ -139,6 +153,24 @@ public class AssignmentRepository {
         }
     }
 
+    public class TagReminderAsCompleteTask extends AsyncTask<Void, Void, Void>{
+        AssignmentDao assignmentDao;
+        boolean reminderStatus;
+        int reminderId;
+
+        public TagReminderAsCompleteTask(AssignmentDao assignmentDao, boolean reminderStatus, int reminderId) {
+            this.assignmentDao = assignmentDao;
+            this.reminderStatus = reminderStatus;
+            this.reminderId = reminderId;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            assignmentDao.tagReminderAsComplete(reminderStatus, reminderId);
+            return null;
+        }
+    }
+
     // API Calls
     private void loadCanvasAssignments(List<Course> courses) {
         for (Course course: courses) {
@@ -185,5 +217,6 @@ public class AssignmentRepository {
             }
         }
         return list;
+
     }
 }
