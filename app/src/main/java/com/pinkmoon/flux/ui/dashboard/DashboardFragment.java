@@ -50,6 +50,7 @@ import com.pinkmoon.flux.ui.notifications.AlertReceiver;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DashboardFragment extends Fragment {
@@ -81,6 +82,7 @@ public class DashboardFragment extends Fragment {
     private List<Assignment> localAssignments = new ArrayList<>();
     private boolean localCoursesLoaded, localAssignmentsLoaded = false;
 
+    private List<CourseAssignmentJoin> courseAssignmentJoinList = new ArrayList<>();
 
     // screen's dimensions
     int sWidth;
@@ -166,15 +168,46 @@ public class DashboardFragment extends Fragment {
         return view;
     }
 
-    public void reminderFunctionalities(String reminderTitle, String reminderBody, int reminderId){
+    public void reminderFunctionalities(long timeInMili,
+                                        String reminderTitle, String reminderBody, int reminderId){
         reminderIntent.putExtra(EXTRA_REMINDER_TITLE, reminderTitle);
         // Reminder intent -- CHECKPOINT
         reminderIntent.putExtra(EXTRA_REMINDER_BODY, reminderBody);
         reminderIntent.putExtra(EXTRA_REMINDER_ID, reminderId);
+        pendingIntent = PendingIntent.getBroadcast(
+                getContext(),
+                reminderId,
+                reminderIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMili,pendingIntent);
 
     }
+    // ##########################
+    public void reminderSetUp()
+    {
+        int i = 0;
+        int listSize = courseAssignmentJoinList.size();
+        for(; i < listSize; i++)
+        {
+            if(courseAssignmentJoinList.get(i).isComplete() == Boolean.FALSE)
+            {
+                Calendar c = FluxDate.convertToDateTime(courseAssignmentJoinList.get(i).getAssignmentDueDate());
+                // Make a reminder?
+                long miliTime = c.getTimeInMillis();
 
+                reminderFunctionalities(
+                        miliTime,
+                        courseAssignmentJoinList.get(i).getCourseName(),
+                        courseAssignmentJoinList.get(i).getAssignmentName(),
+                        courseAssignmentJoinList.get(i).getAssignmentId()
+                        );
 
+            }
+
+        }
+
+    }
 
     private void checkToEnableSwipeRefresh() {
         if(localCoursesLoaded && localAssignmentsLoaded){
@@ -276,6 +309,7 @@ public class DashboardFragment extends Fragment {
                                 public void onChanged(List<CourseAssignmentJoin> courseAssignmentJoins) {
                                     courseAssignmentJoinAdapter
                                             .setAssignmentsByDueDate(courseAssignmentJoins);
+                                    courseAssignmentJoinList = courseAssignmentJoins;
                                 }
                             });
                 }
