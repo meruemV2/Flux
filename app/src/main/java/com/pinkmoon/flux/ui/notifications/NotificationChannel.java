@@ -13,7 +13,7 @@ import android.os.Build;
 //Two channels: Canvas Assignments, Normal Tasks
 
 public class NotificationChannel extends Application {
-    public static final String CHANNEL_1_ID = "channel1";
+    public static final String CHANNEL_1_ID = "com.pinkmoon.flux.ui.notifications.channel1";
     public static final String CHANNEL_2_ID = "channel2";
 
     @Override

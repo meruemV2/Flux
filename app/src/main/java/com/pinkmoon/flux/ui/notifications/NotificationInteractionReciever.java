@@ -20,7 +20,7 @@ public class NotificationInteractionReciever extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        reminderId = intent.getIntExtra(DashboardFragment.EXTRA_REMINDER_ID, -1);
+        reminderId = intent.getIntExtra(FluxReminderHelper.EXTRA_REMINDER_ID, -1);
         notificationManagerCompat = NotificationManagerCompat.from(context);
 
 
@@ -38,7 +38,7 @@ public class NotificationInteractionReciever extends BroadcastReceiver {
         @Override
         protected Void doInBackground(Context... contexts) {
            assignmentRepository  = new AssignmentRepository(passedContext);
-           assignmentRepository.tagReminderComplete(true, reminderId);
+           assignmentRepository.tagReminderComplete(1, reminderId);
             return null;
         }
 

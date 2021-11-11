@@ -9,9 +9,9 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.pinkmoon.flux.MainActivity;
 import com.pinkmoon.flux.R;
 import com.pinkmoon.flux.ui.dashboard.DashboardFragment;
+
 
 public class AlertReceiver extends BroadcastReceiver {
     private NotificationManagerCompat notificationManagerCompat;
@@ -19,9 +19,9 @@ public class AlertReceiver extends BroadcastReceiver {
             "com.pinkmoon.flux.DashboardFragment.CHANNEL_REMINDER_REG";
     @Override
     public void onReceive(Context context, Intent intent) {
-        String reminderTitle = intent.getStringExtra(DashboardFragment.EXTRA_REMINDER_TITLE);
-        String reminderBody = intent.getStringExtra(DashboardFragment.EXTRA_REMINDER_BODY);
-        int reminderId = intent.getIntExtra(DashboardFragment.EXTRA_REMINDER_ID, -1);
+        String reminderTitle = intent.getStringExtra(FluxReminderHelper.EXTRA_REMINDER_TITLE);
+        String reminderBody = intent.getStringExtra(FluxReminderHelper.EXTRA_REMINDER_BODY);
+        int reminderId = intent.getIntExtra(FluxReminderHelper.EXTRA_REMINDER_ID, -1);
 
         notificationManagerCompat = NotificationManagerCompat.from(context);
 
@@ -36,14 +36,14 @@ public class AlertReceiver extends BroadcastReceiver {
                 reminderId, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent broadcastIntent = new Intent(context, NotificationInteractionReciever.class);
-        broadcastIntent.putExtra(DashboardFragment.EXTRA_REMINDER_ID, reminderId);
-        broadcastIntent.putExtra(DashboardFragment.EXTRA_REMINDER_BODY, reminderBody);
+        broadcastIntent.putExtra(FluxReminderHelper.EXTRA_REMINDER_ID, reminderId);
+        broadcastIntent.putExtra(FluxReminderHelper.EXTRA_REMINDER_BODY, reminderBody);
 
         PendingIntent actionIntent = PendingIntent.getBroadcast(context,
                 reminderId, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(context,
-                CHANNEL_REMINDER_REG)
+                NotificationChannel.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_android_black_24dp)
                 .setContentTitle(reminderTitle)
                 .setContentText(reminderBody)

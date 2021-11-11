@@ -48,11 +48,6 @@
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right" />
         <action
-            android:id="@+id/action_addEditTaskFragment_to_navigation_tasks"
-            app:destination="@id/navigation_tasks"
-            app:enterAnim="@anim/slide_out_bottom"
-            app:exitAnim="@anim/slide_out_bottom" />
-        <action
             android:id="@+id/action_addEditTaskFragment_to_addEditCategoryFragment"
             app:destination="@id/addEditCategoryFragment" />
         <argument
@@ -67,6 +62,11 @@
             android:name="selectedCategoryId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_addEditTaskFragment_to_navigation_dashboard"
+            app:destination="@id/navigation_dashboard"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/reminderDetailFragment"

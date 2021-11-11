@@ -17,6 +17,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.pinkmoon.flux.API.Quiz;
 import com.pinkmoon.flux.API.Course;
+import com.pinkmoon.flux.FluxDate;
 import com.pinkmoon.flux.db.FluxDB;
 
 import org.json.JSONArray;
@@ -160,6 +161,7 @@ public class QuizRepository
                 JSONObject singleQuiz = response.getJSONObject(i);
                 Gson gson = new Gson();
                 Quiz quiz = gson.fromJson(singleQuiz.toString(), Quiz.class);
+                quiz.setQuizDueDate(FluxDate.convertToLocalTime(quiz.getQuizDueDate()));
                 quiz.setQuizCourseId(courseId);
                 if(quiz.getQuizName() != null && quiz.getQuizId() != null)
                 {

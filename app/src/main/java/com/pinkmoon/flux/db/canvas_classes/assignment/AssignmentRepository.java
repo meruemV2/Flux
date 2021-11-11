@@ -71,10 +71,10 @@ public class AssignmentRepository {
     public AssignmentRepository(Context context)
     {
         FluxDB fluxDB = FluxDB.getInstance(application);
-
+        assignmentDao = fluxDB.assignmentDao();
     }
 
-    public void tagReminderComplete(boolean reminderStatus, int reminderId)
+    public void tagReminderComplete(int reminderStatus, int reminderId)
     {
         new TagReminderAsCompleteTask(assignmentDao, reminderStatus, reminderId).execute();
     }
@@ -155,10 +155,10 @@ public class AssignmentRepository {
 
     public class TagReminderAsCompleteTask extends AsyncTask<Void, Void, Void>{
         AssignmentDao assignmentDao;
-        boolean reminderStatus;
+        int reminderStatus;
         int reminderId;
 
-        public TagReminderAsCompleteTask(AssignmentDao assignmentDao, boolean reminderStatus, int reminderId) {
+        public TagReminderAsCompleteTask(AssignmentDao assignmentDao, int reminderStatus, int reminderId) {
             this.assignmentDao = assignmentDao;
             this.reminderStatus = reminderStatus;
             this.reminderId = reminderId;

@@ -14,6 +14,8 @@ public class CourseAssignmentJoinRepository {
 
     private LiveData<List<CourseAssignmentJoin>> assignmentsByDueDate;
 
+    private LiveData<List<CourseAssignmentJoin>> allCourseAssignments;
+
     public CourseAssignmentJoinRepository(Application application) {
         FluxDB fluxDB = FluxDB.getInstance(application);
 
@@ -23,5 +25,12 @@ public class CourseAssignmentJoinRepository {
     public LiveData<List<CourseAssignmentJoin>> getAssignmentsByDueDate(String dueDate) {
         assignmentsByDueDate = courseAssignmentJoinDao.getAllCourseAssignmentsByDueDate(dueDate);
         return assignmentsByDueDate;
+    }
+
+    public LiveData<List<CourseAssignmentJoin>> getAllCourseAssignmentsByCompletedStatus(boolean isComplete,
+                                                                                         String date) {
+        allCourseAssignments = courseAssignmentJoinDao
+                .getAllCourseAssignmentsByDateAndCompletedStatus(isComplete, date);
+        return allCourseAssignments;
     }
 }

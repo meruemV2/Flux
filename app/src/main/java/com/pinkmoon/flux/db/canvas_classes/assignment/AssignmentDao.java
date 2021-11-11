@@ -33,5 +33,5 @@ public interface AssignmentDao {
     LiveData<List<Assignment>> getAssignmentsByYearMonth(String yearMonth);
 
     @Query("UPDATE table_assignment SET isComplete = :reminderStatus WHERE assignmentId = :reminderId")
-    void tagReminderAsComplete(boolean reminderStatus, int reminderId);
+    void tagReminderAsComplete(int reminderStatus, int reminderId);
 }

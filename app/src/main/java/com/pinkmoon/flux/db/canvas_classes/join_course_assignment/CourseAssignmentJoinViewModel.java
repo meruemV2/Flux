@@ -14,6 +14,8 @@ public class CourseAssignmentJoinViewModel extends AndroidViewModel {
 
     private LiveData<List<CourseAssignmentJoin>> assignmentsByDueDate;
 
+    private LiveData<List<CourseAssignmentJoin>> allCourseAssignments;
+
     public CourseAssignmentJoinViewModel(@NonNull Application application) {
         super(application);
 
@@ -23,5 +25,12 @@ public class CourseAssignmentJoinViewModel extends AndroidViewModel {
     public LiveData<List<CourseAssignmentJoin>> getAssignmentsByDueDate(String dueDate) {
         assignmentsByDueDate = courseAssignmentJoinRepository.getAssignmentsByDueDate(dueDate);
         return assignmentsByDueDate;
+    }
+
+    public LiveData<List<CourseAssignmentJoin>> getAllCourseAssignmentsByCompletedStatus(boolean isComplete,
+                                                                                         String date) {
+        allCourseAssignments = courseAssignmentJoinRepository
+                .getAllCourseAssignmentsByCompletedStatus(isComplete, date);
+        return allCourseAssignments;
     }
 }

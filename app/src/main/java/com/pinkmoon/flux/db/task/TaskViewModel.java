@@ -25,8 +25,8 @@ public class TaskViewModel extends AndroidViewModel {
         allTasksSortedByDueDate = taskRepository.getAllTasksSortedByDueDate();
     }
 
-    public void insertTask(Task task) {
-        taskRepository.insertTask(task);
+    public long insertTask(Task task) {
+       return taskRepository.insertTask(task);
     }
 
     public void updateTask(Task task) {

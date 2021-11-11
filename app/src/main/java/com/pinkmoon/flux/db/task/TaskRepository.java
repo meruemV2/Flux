@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.pinkmoon.flux.db.FluxDB;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Handles all operations that will interact with the DB.
@@ -35,8 +36,13 @@ public class TaskRepository {
     }
 
     // Database operations
-    public void insertTask(Task task) {
-        new InsertTaskAsync(taskDao).execute(task);
+    public long insertTask(Task task) {
+        try{
+            return new InsertTaskAsync(taskDao).execute(task).get();
+        } catch (ExecutionException | InterruptedException e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public void updateTask(Task task) {
@@ -50,7 +56,7 @@ public class TaskRepository {
     public LiveData<List<Task>> getAllTasksSortedByDueDate() { return allTasksSortedByDueDate; }
 
     // Async task operations
-    public class InsertTaskAsync extends AsyncTask<Task, Void, Void> {
+    public class InsertTaskAsync extends AsyncTask<Task, Void, Long> {
 
         TaskDao taskDao;
 
@@ -59,9 +65,10 @@ public class TaskRepository {
         }
 
         @Override
-        protected Void doInBackground(Task... tasks) {
-            taskDao.insertTask(tasks[0]);
-            return null;
+        protected Long doInBackground(Task... tasks) {
+            long id;
+            id = taskDao.insertTask(tasks[0]);
+            return id;
         }
     }
 

@@ -19,7 +19,7 @@ import java.util.List;
 public interface TaskDao {
 
     @Insert
-    void insertTask(Task task);
+    long insertTask(Task task);
 
     @Update
     void updateTask(Task task);

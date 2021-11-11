@@ -135,6 +135,20 @@ public class FluxDate {
         return formatter.format(date);
     }
 
+    public static String formatDateTimeFromMDPToDBFormat(String dateTimeString){
+        DateFormat parser = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
+        Date date = null;
+        try {
+            date = (Date) parser.parse(dateTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        assert date != null;
+        return formatter.format(date);
+    }
+
     /**
      * Takes in a string date object, extracts the day of the month from it.
      * @param dateTimeString string of the format yyyy-MM-dd
@@ -208,5 +222,26 @@ public class FluxDate {
         convertedDateTime.set(Calendar.SECOND, 0);
 
         return convertedDateTime;
+    }
+
+    public static String singleDigitToDouble(int singleDigitTime){
+        return "0" + singleDigitTime;
+    }
+
+    public static boolean isSingleDigitTime(String time){
+        return time.length() <= 1;
+    }
+
+    /**
+     * Takes a LocalDate object, and converts it to a String of the format we use
+     * to store dates in our database.
+     * @param date local date object (likely selected by the user)
+     * @param dayNum the day of the month, selected by the user upon tapping on the Calendar
+     * @return a string date object of the format: yyyy-MM-dd
+     */
+    public static String formatDateForDB(Calendar c){
+        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        parser.setCalendar(c);
+        return parser.format(c.getTime());
     }
 }

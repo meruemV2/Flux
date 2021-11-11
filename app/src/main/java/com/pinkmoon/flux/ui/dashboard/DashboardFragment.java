@@ -1,10 +1,5 @@
 package com.pinkmoon.flux.ui.dashboard;
 
-import static android.content.Context.*;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +8,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,8 +26,6 @@ import com.pinkmoon.flux.API.Quiz;
 import com.pinkmoon.flux.FluxDate;
 
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import com.pinkmoon.flux.R;
 import com.pinkmoon.flux.API.Assignment;
 import com.pinkmoon.flux.API.Course;
@@ -45,7 +37,7 @@ import com.pinkmoon.flux.db.canvas_classes.join_course_assignment.CourseAssignme
 import com.pinkmoon.flux.db.canvas_classes.quiz.QuizViewModel;
 import com.pinkmoon.flux.ui.dashboard.calendar.CalendarAdapter;
 
-import com.pinkmoon.flux.ui.notifications.AlertReceiver;
+import com.pinkmoon.flux.ui.notifications.FluxReminderHelper;
 
 
 import java.time.LocalDate;
@@ -84,6 +76,8 @@ public class DashboardFragment extends Fragment {
 
     private List<CourseAssignmentJoin> courseAssignmentJoinList = new ArrayList<>();
 
+    private FluxReminderHelper reminderHelper;
+
     // screen's dimensions
     int sWidth;
     int sHeight;
@@ -91,18 +85,6 @@ public class DashboardFragment extends Fragment {
     private CourseAssignmentJoinAdapter courseAssignmentJoinAdapter;
 
 
-    // Alarm stuff
-    private AlarmManager alarmManager;
-    private Intent reminderIntent;
-    private PendingIntent pendingIntent;
-
-    //INTENT EXTRAS, Alarm stuff.
-    public static final String EXTRA_REMINDER_TITLE = ".main.EXTRA_REMINDER_TITLE";
-    public static final String EXTRA_REMINDER_BODY = ".main.EXTRA_REMINDER_BODY";
-    public static final String EXTRA_REMINDER_ID =   ".main.EXTRA_REMINDER_ID";
-    public static final String EXTRA_REMINDER_DATE = ".main.EXTRA_REMINDER_DATE";
-    public static final String EXTRA_REMINDER_TIME = ".main.EXTRA_REMINDER_TIME";
-    public static final String EXTRA_REMINDER_STATUS = ".main.EXTRA_REMINDER_STATUS";
     // onCreate.
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -119,10 +101,7 @@ public class DashboardFragment extends Fragment {
 
         courseAssignmentJoinAdapter = new CourseAssignmentJoinAdapter();
 
-        //Alarm stuff.
-        alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
-        reminderIntent = new Intent(getActivity(), AlertReceiver.class);
-
+        reminderHelper = FluxReminderHelper.getInstance(getActivity());
     }
 
     // onCreate VIEW.
@@ -162,46 +141,36 @@ public class DashboardFragment extends Fragment {
                 localAssignments = assignments;
                 localAssignmentsLoaded = true;
                 checkToEnableSwipeRefresh();
+                setAssignmentReminders();
             }
         });
 
         return view;
     }
 
-    public void reminderFunctionalities(long timeInMili,
-                                        String reminderTitle, String reminderBody, int reminderId){
-        reminderIntent.putExtra(EXTRA_REMINDER_TITLE, reminderTitle);
-        // Reminder intent -- CHECKPOINT
-        reminderIntent.putExtra(EXTRA_REMINDER_BODY, reminderBody);
-        reminderIntent.putExtra(EXTRA_REMINDER_ID, reminderId);
-        pendingIntent = PendingIntent.getBroadcast(
-                getContext(),
-                reminderId,
-                reminderIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
 
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMili,pendingIntent);
-
-    }
     // ##########################
-    public void reminderSetUp()
+    public void reminderSetUp(List<CourseAssignmentJoin> courseAssignmentJoins)
     {
         int i = 0;
-        int listSize = courseAssignmentJoinList.size();
+        int listSize = courseAssignmentJoins.size();
         for(; i < listSize; i++)
         {
-            if(courseAssignmentJoinList.get(i).isComplete() == Boolean.FALSE)
+            if(!courseAssignmentJoins.get(i).isComplete())
             {
-                Calendar c = FluxDate.convertToDateTime(courseAssignmentJoinList.get(i).getAssignmentDueDate());
-                // Make a reminder?
-                long miliTime = c.getTimeInMillis();
+                if (courseAssignmentJoins.get(i).getAssignmentDueDate() != null &&
+                    !courseAssignmentJoins.get(i).getAssignmentDueDate().equals("")) {
+                    Calendar c = FluxDate.convertToDateTime(courseAssignmentJoins.get(i).getAssignmentDueDate());
+                    // Make a reminder?
+                    long miliTime = c.getTimeInMillis();
 
-                reminderFunctionalities(
-                        miliTime,
-                        courseAssignmentJoinList.get(i).getCourseName(),
-                        courseAssignmentJoinList.get(i).getAssignmentName(),
-                        courseAssignmentJoinList.get(i).getAssignmentId()
-                        );
+                    reminderHelper.createSingleReminder(
+                            miliTime,
+                            courseAssignmentJoins.get(i).getCourseName(),
+                            courseAssignmentJoins.get(i).getAssignmentName(),
+                            courseAssignmentJoins.get(i).getAssignmentId()
+                            );
+                }
 
             }
 
@@ -247,6 +216,20 @@ public class DashboardFragment extends Fragment {
                     public void onChanged(List<Quiz> quizzes) {
                         quizViewModel.insertQuiz(quizzes.toArray(quizzes.toArray(new Quiz[0])));
                         srlRefreshHolder.setRefreshing(false);
+                    }
+                });
+    }
+
+    public void setAssignmentReminders(){
+        // set reminders for incomplete Canvas assignments
+        Calendar now = Calendar.getInstance();
+        String date = FluxDate.formatDateForDB(now);
+        courseAssignmentJoinViewModel
+                .getAllCourseAssignmentsByCompletedStatus(false, FluxDate.formatDateForDB(now))
+                .observe(getViewLifecycleOwner(), new Observer<List<CourseAssignmentJoin>>() {
+                    @Override
+                    public void onChanged(List<CourseAssignmentJoin> courseAssignmentJoins) {
+                        reminderSetUp(courseAssignmentJoins);
                     }
                 });
     }
@@ -310,7 +293,6 @@ public class DashboardFragment extends Fragment {
                                     courseAssignmentJoinAdapter
                                             .setAssignmentsByDueDate(courseAssignmentJoins);
                                     courseAssignmentJoinList = courseAssignmentJoins;
-                                    reminderSetUp();
                                 }
                             });
                 }
