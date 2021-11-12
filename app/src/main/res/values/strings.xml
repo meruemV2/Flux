@@ -33,5 +33,10 @@
     <string name="str_daily">Daily</string>
     <string name="str_weekly">Weekly</string>
     <string name="str_never">Never</string>
+    <string name="stops_timer" />
+    <string name="starts_pauses_timer" />
+    <string name="rest" />
+    <string name="countdown_viewer" />
+    <string name="rest1">rest</string>
 
 </resources>

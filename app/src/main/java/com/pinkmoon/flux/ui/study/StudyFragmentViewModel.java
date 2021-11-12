@@ -1,14 +1,19 @@
 package com.pinkmoon.flux.ui.study;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class StudyFragmentViewModel extends ViewModel {
 
-    // MutableLiveData declarations here
+    private MutableLiveData<String> mText;
 
     public StudyFragmentViewModel() {
-        // define the mutable live data crap here
+        mText = new MutableLiveData<>();
+        mText.setValue("This is the Study fragment");
     }
 
-    // getters for the mutable live data objects here
+    public LiveData<String> getText() {
+        return mText;
+    }
 }
